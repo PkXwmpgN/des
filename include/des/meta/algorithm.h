@@ -27,18 +27,26 @@ IN THE SOFTWARE.
 #include <tuple>
 
 #include "names.h"
-#include "details/apply_index.h"
+#include "details/tuple_apply.h"
 
 DES_META_BEGIN
 
 template<typename _Tuple, typename _Function>
-inline constexpr auto transform(_Tuple tuple, _Function fn)
+inline constexpr auto transform(_Tuple tuple, _Function fn) noexcept
 {
     return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
     {
         return std::make_tuple(fn(std::get<Is>(tuple))...);
     });
 }
+
+/*
+template<typename _Tuple, typename _Predicate>
+inline constexpr auto find(_Tuple tuple, _Predicate pr) noexcept
+{
+
+}
+*/
 
 DES_META_END
 
