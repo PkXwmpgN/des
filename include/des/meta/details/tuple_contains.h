@@ -21,28 +21,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_META_TRAITS_H_INCLUDED__
-#define __DES_META_TRAITS_H_INCLUDED__
+#ifndef __DES_META_DETAILS_TUPLE_CONTAINS_H_INCLUDED__
+#define __DES_META_DETAILS_TUPLE_CONTAINS_H_INCLUDED__
 
 #include <utility>
-#include "names.h"
-#include "details/tuple_contains.h"
-#include "details/type_specialization.h"
+#include <tuple>
 
-DES_META_BEGIN
-
-template <template<typename...> class _Template, typename _Type>
-using is_specialization_of = typename details::is_specialization_of<_Template, _Type>::type;
-
-template <template<typename...> class _Template, typename _Type>
-constexpr auto is_specialization_of_v = is_specialization_of<_Template, _Type>::value;
+DES_META_DETAILS_BEGIN
 
 template<typename _Type, typename _Tuple>
-using is_tuple_contains = typename details::tuple_contains_type<_Type, _Tuple>::type;
+struct tuple_contains_type;
 
-template<typename _Type, typename _Tuple>
-constexpr auto is_tuple_contains_v = is_tuple_contains<_Type, _Tuple>::value;
+template<typename _Type>
+struct tuple_contains_type<_Type, std::tuple<>> : std::false_type
+{};
 
-DES_META_END
+template<typename _Type, typename _Head, typename... _Tail>
+struct tuple_contains_type<_Type, std::tuple<_Head, _Tail...>>
+     : tuple_contains_type<_Type, std::tuple<_Tail...>>
+{};
 
-#endif // __DES_META_TRAITS_H_INCLUDED__
+template<typename _Type, typename... _Tail>
+struct tuple_contains_type<_Type, std::tuple<_Type, _Tail...>> : std::true_type
+{};
+
+DES_META_DETAILS_END
+
+#endif // __DES_META_DETAILS_TUPLE_CONTAINS_H_INCLUDED__
