@@ -25,13 +25,14 @@ IN THE SOFTWARE.
 #define __DES_META_TYPES_H_INCLUDED__
 
 #include <utility>
+#include <cstddef>
 #include "names.h"
 
 DES_META_BEGIN
 
-template<size_t _Size>
+template<std::size_t _Size>
 using size = std::integral_constant<decltype(_Size), _Size>;
-template<size_t _Size>
+template<std::size_t _Size>
 constexpr auto size_v = size<_Size>{};
 
 using true_type = std::true_type;

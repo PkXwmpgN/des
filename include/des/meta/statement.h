@@ -30,9 +30,9 @@ IN THE SOFTWARE.
 DES_META_BEGIN
 
 template<typename _Predicate>
-inline constexpr auto if_(_Predicate) noexcept
+inline constexpr auto if_(_Predicate pred) noexcept
 {
-    return details::make_if_statement(_Predicate{});
+    return details::make_if_statement(pred);
 }
 
 DES_META_END

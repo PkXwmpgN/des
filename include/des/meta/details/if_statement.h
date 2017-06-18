@@ -92,9 +92,9 @@ struct if_statement<true> final
 };
 
 template<typename _Predicate>
-inline constexpr auto make_if_statement(_Predicate) noexcept
+inline constexpr auto make_if_statement(_Predicate pred) noexcept
 {
-    return if_statement<_Predicate{}>{};
+    return if_statement<pred>{};
 }
 
 DES_META_DETAILS_END
