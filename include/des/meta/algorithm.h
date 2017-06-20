@@ -27,6 +27,7 @@ IN THE SOFTWARE.
 #include <tuple>
 
 #include "names.h"
+#include "statement.h"
 #include "details/tuple_apply.h"
 
 DES_META_BEGIN
@@ -40,13 +41,19 @@ inline constexpr auto transform(_Tuple tuple, _Function fn) noexcept
     });
 }
 
-/*
 template<typename _Tuple, typename _Predicate>
-inline constexpr auto find(_Tuple tuple, _Predicate pr) noexcept
+inline constexpr auto get(_Tuple && tuple, _Predicate && pred) noexcept
 {
-
+    return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
+    {
+        return std::tuple_cat([](auto && value, auto && pred)
+        {
+            return if_(pred(value))
+                .then_([&value](){ return std::make_tuple(value); })
+                .else_([](){ return std::make_tuple(); })();
+        }(std::get<Is>(tuple), pred)...);
+    });
 }
-*/
 
 DES_META_END
 
