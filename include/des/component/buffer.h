@@ -24,10 +24,12 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_BUFFER_H_INCLUDED__
 #define __DES_COMPONENT_BUFFER_H_INCLUDED__
 
+#include <utility>
 #include <tuple>
 
 #include "names.h"
 #include "details/buffer.h"
+#include "details/buffer.inl"
 
 DES_COMPONENT_BEGIN
 
@@ -35,7 +37,7 @@ template<typename... _Components>
 inline constexpr auto make_buffer(_Components...) noexcept
 {
     constexpr auto list = std::tuple<_Components...>{};
-    return details::buffer_maker<decltype(list)>{};
+    return details::buffer_maker<std::decay_t<decltype(list)>>{};
 }
 
 DES_COMPONENT_END

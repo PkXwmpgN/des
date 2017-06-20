@@ -24,32 +24,74 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 
+#include <type_traits>
+#include <array>
+#include <vector>
+
 #include "des/meta/statement.h"
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Components, size_t _Capacity>
-struct fixed_buffer {};
+template<typename _Self, typename _Components>
+struct buffer_base
+{
+public:
 
-template<typename _Components, size_t _Capacity>
-struct dynamic_buffer {};
+    using components_list = _Components;
+    using self_type = _Self;
+
+    template<typename _Component, typename _Id>
+    decltype(auto) get(_Component component, _Id ide) const noexcept;
+
+    template<typename _Component, typename _Id>
+    decltype(auto) get(_Component component, _Id ide) noexcept;
+
+private:
+
+    decltype(auto) self() const noexcept;
+    decltype(auto) self() noexcept;
+};
+
+template<typename _Components, typename _Capacity>
+struct buffer_fixed final :
+    buffer_base<buffer_fixed<_Components, _Capacity>, _Components>
+{
+    using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
+    using components_list = typename base_type::components_list;
+private:
+
+    decltype(auto) data() const noexcept { return data_; }
+    decltype(auto) data() noexcept { return data_; }
+
+private:
+
+    std::array<_Components, _Capacity::value> data_;
+};
+
+template<typename _Components, typename _Capacity>
+struct buffer_dynamic final :
+    buffer_base<buffer_dynamic<_Components, _Capacity>, _Components>
+{
+    using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
+    using components_list = typename base_type::components_list;
+
+    buffer_dynamic();
+
+private:
+
+    decltype(auto) data() const noexcept { return data_; }
+    decltype(auto) data() noexcept { return data_; }
+
+private:
+
+    std::vector<_Components> data_;
+};
 
 template<typename _Components>
 struct buffer_maker
 {
     template<typename _Config>
-    constexpr auto make(_Config cfg) noexcept
-    {
-        return meta::if_(cfg.fixed())
-            .then_([](auto cfg)
-            {
-                return fixed_buffer<_Components, cfg.capacity()>{};
-            })
-            .else_([](auto cfg)
-            {
-                return dynamic_buffer<_Components, cfg.capacity()>{};
-            })(cfg);
-    }
+    constexpr auto make(_Config cfg) noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

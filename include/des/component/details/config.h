@@ -54,7 +54,7 @@ template<typename... _Values>
 inline constexpr auto make_config(_Values...) noexcept
 {
     constexpr auto list = std::tuple<_Values...>{};
-    return config<decltype(list)>{};
+    return config<std::decay_t<decltype(list)>>{};
 }
 
 DES_COMPONENT_DETAILS_END

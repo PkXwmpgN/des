@@ -29,7 +29,7 @@ IN THE SOFTWARE.
 DES_COMPONENT_DETAILS_BEGIN
 
 template<typename _Type>
-struct handle
+struct handle : _Type
 {
     using underlying_type = _Type;
 };

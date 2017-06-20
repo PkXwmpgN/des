@@ -34,16 +34,28 @@ template<typename _Data>
 struct storage
 {
 
-};
 
-template<typename _Config>
-struct storage_generator
-{
-    template<typename _Buffer>
-    constexpr auto operator()(_Buffer buffer) const noexcept
+private:
+
+    template<typename _Component>
+    constexpr decltype(auto) get_buffer(_Component) const noexcept
     {
-        return buffer.make(_Config{});
+        constexpr auto buffer = meta::get(data_, [](auto & buffer)
+        {
+            using buffer_type = std::decay_t<decltype(buffer)>;
+            using buffer_component_list = typename buffer_type::component_list;
+            return meta::is_tuple_contains_v<_Component, buffer_component_list>;
+        });
+
+        using buffer_type = std::decay_t<decltype(buffer)>;
+        static_assert(std::tuple_size<buffer_type>::value == 1, "");
+
+        return std::get<0>(buffer);
     }
+
+private:
+
+    _Data data_;
 };
 
 template<typename _Buffers>
@@ -66,9 +78,12 @@ struct storage_maker
 private:
 
     template<typename _Config>
-    auto make_storage(_Config) const noexcept
+    auto make_storage(_Config cfg) const noexcept
     {
-        auto data = meta::transform(_Buffers{}, storage_generator<_Config>{});
+        auto data = meta::transform(_Buffers{}, [&cfg](auto buffer)
+        {
+            return buffer.make(cfg);
+        });
         return storage<decltype(data)>{};
     }
 };
