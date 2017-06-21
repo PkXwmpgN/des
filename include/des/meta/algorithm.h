@@ -33,7 +33,7 @@ IN THE SOFTWARE.
 DES_META_BEGIN
 
 template<typename _Tuple, typename _Function>
-inline constexpr auto transform(_Tuple tuple, _Function fn) noexcept
+inline constexpr auto transform(const _Tuple & tuple, _Function fn) noexcept
 {
     return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
     {
@@ -42,16 +42,16 @@ inline constexpr auto transform(_Tuple tuple, _Function fn) noexcept
 }
 
 template<typename _Tuple, typename _Predicate>
-inline constexpr auto get(_Tuple && tuple, _Predicate && pred) noexcept
+inline constexpr auto get(const _Tuple & tuple, _Predicate pred) noexcept
 {
     return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
     {
-        return std::tuple_cat([](auto && value, auto && pred)
+        return std::tuple_cat([](const auto & value, auto index, auto pred)
         {
             return if_(pred(value))
-                .then_([&value](){ return std::make_tuple(value); })
+                .then_([&index](){ return std::make_tuple(index); })
                 .else_([](){ return std::make_tuple(); })();
-        }(std::get<Is>(tuple), pred)...);
+        }(std::get<Is>(tuple), Is, pred)...);
     });
 }
 

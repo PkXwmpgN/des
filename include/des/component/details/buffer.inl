@@ -22,29 +22,38 @@ IN THE SOFTWARE.
 */
 
 #include <cassert>
+#include <type_traits>
+
+#include "des/meta/statement.h"
 
 DES_COMPONENT_DETAILS_BEGIN
 
 template<typename _Self, typename _Components>
 template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Components>::get(_Component component,
-        _Id ide) const noexcept
+inline decltype(auto) buffer_base<_Self, _Components>::get(_Component && component,
+        _Id && ide) const noexcept
 {
     assert(ide.value() < self().data().size());
 
     using component_type = std::decay_t<decltype(component)>;
-    return std::get<component_type>(self().data()[ide.value]);
+    return std::get<component_type>(self().data()[ide.value()]);
 }
 
 template<typename _Self, typename _Components>
 template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Components>::get(_Component component,
-        _Id ide) noexcept
+inline decltype(auto) buffer_base<_Self, _Components>::get(_Component && component,
+        _Id && ide) noexcept
 {
     assert(ide.value() < self().data().size());
 
     using component_type = std::decay_t<decltype(component)>;
-    return std::get<component_type>(self().data()[ide.value]);
+    return std::get<component_type>(self().data()[ide.value()]);
+}
+
+template<typename _Self, typename _Components>
+inline auto buffer_base<_Self, _Components>::size() const noexcept
+{
+    return self().data().size();
 }
 
 template<typename _Self, typename _Components>

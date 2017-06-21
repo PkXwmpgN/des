@@ -24,11 +24,8 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 
-#include <type_traits>
 #include <array>
 #include <vector>
-
-#include "des/meta/statement.h"
 
 DES_COMPONENT_DETAILS_BEGIN
 
@@ -37,14 +34,22 @@ struct buffer_base
 {
 public:
 
-    using components_list = _Components;
+    using component_list = _Components;
     using self_type = _Self;
 
-    template<typename _Component, typename _Id>
-    decltype(auto) get(_Component component, _Id ide) const noexcept;
+    buffer_base() = default;
+    buffer_base(buffer_base &&) = default;
+    buffer_base & operator=(buffer_base &&) = default;
+    buffer_base(const buffer_base &) = delete;
+    buffer_base & operator=(const buffer_base &) = delete;
 
     template<typename _Component, typename _Id>
-    decltype(auto) get(_Component component, _Id ide) noexcept;
+    decltype(auto) get(_Component && component, _Id && ide) const noexcept;
+
+    template<typename _Component, typename _Id>
+    decltype(auto) get(_Component && component, _Id && ide) noexcept;
+
+    auto size() const noexcept;
 
 private:
 
@@ -57,11 +62,12 @@ struct buffer_fixed final :
     buffer_base<buffer_fixed<_Components, _Capacity>, _Components>
 {
     using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
-    using components_list = typename base_type::components_list;
+    friend base_type;
+
 private:
 
-    decltype(auto) data() const noexcept { return data_; }
-    decltype(auto) data() noexcept { return data_; }
+    const auto & data() const noexcept { return data_; }
+    auto & data() noexcept { return data_; }
 
 private:
 
@@ -73,14 +79,16 @@ struct buffer_dynamic final :
     buffer_base<buffer_dynamic<_Components, _Capacity>, _Components>
 {
     using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
-    using components_list = typename base_type::components_list;
+    friend base_type;
+
+public:
 
     buffer_dynamic();
 
 private:
 
-    decltype(auto) data() const noexcept { return data_; }
-    decltype(auto) data() noexcept { return data_; }
+    const auto & data() const noexcept { return data_; }
+    auto data() noexcept { return data_; }
 
 private:
 

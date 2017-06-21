@@ -24,8 +24,6 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_STORAGE_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_STORAGE_H_INCLUDED__
 
-#include "config.h"
-#include "des/meta/algorithm.h"
 #include "des/meta/types.h"
 
 DES_COMPONENT_DETAILS_BEGIN
@@ -33,25 +31,13 @@ DES_COMPONENT_DETAILS_BEGIN
 template<typename _Data>
 struct storage
 {
+public:
 
+    template<typename _Component, typename _Id>
+    decltype(auto) get(_Component && comp, _Id && id) noexcept;
 
-private:
-
-    template<typename _Component>
-    constexpr decltype(auto) get_buffer(_Component) const noexcept
-    {
-        constexpr auto buffer = meta::get(data_, [](auto & buffer)
-        {
-            using buffer_type = std::decay_t<decltype(buffer)>;
-            using buffer_component_list = typename buffer_type::component_list;
-            return meta::is_tuple_contains_v<_Component, buffer_component_list>;
-        });
-
-        using buffer_type = std::decay_t<decltype(buffer)>;
-        static_assert(std::tuple_size<buffer_type>::value == 1, "");
-
-        return std::get<0>(buffer);
-    }
+    template<typename _Component, typename _Id>
+    decltype(auto) get(_Component && comp, _Id && id) const noexcept;
 
 private:
 
@@ -62,30 +48,15 @@ template<typename _Buffers>
 struct storage_maker
 {
     template<size_t _Capacity>
-    constexpr auto fixed(meta::size<_Capacity> capacity) const noexcept
-    {
-        constexpr auto cfg = make_config(meta::true_v, capacity);
-        return decltype(make_storage(cfg)){};
-    }
+    constexpr auto fixed(meta::size<_Capacity> capacity) const noexcept;
 
     template<size_t _Capacity>
-    constexpr auto dynamic(meta::size<_Capacity> capacity) const noexcept
-    {
-        constexpr auto cfg = make_config(meta::false_v, capacity);
-        return decltype(make_storage(cfg)){};
-    }
+    constexpr auto dynamic(meta::size<_Capacity> capacity) const noexcept;
 
 private:
 
     template<typename _Config>
-    auto make_storage(_Config cfg) const noexcept
-    {
-        auto data = meta::transform(_Buffers{}, [&cfg](auto buffer)
-        {
-            return buffer.make(cfg);
-        });
-        return storage<decltype(data)>{};
-    }
+    auto make_storage(_Config && cfg) const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END
