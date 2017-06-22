@@ -21,29 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_META_TYPES_H_INCLUDED__
-#define __DES_META_TYPES_H_INCLUDED__
+#ifndef __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__
+#define __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__
 
-#include <utility>
-#include <cstddef>
-#include "names.h"
+#include "des/meta/types.h"
 
-DES_META_BEGIN
+DES_CONTEXT_DETAILS_BEGIN
 
-template<std::size_t _Size>
-using size = std::integral_constant<decltype(_Size), _Size>;
-template<std::size_t _Size>
-constexpr auto size_v = size<_Size>{};
+template<typename _Data>
+struct config
+{
+public:
 
-template<bool _Value>
-using bool_constant = std::integral_constant<bool, _Value>;
+    template<size_t _Capacity>
+    constexpr auto fixed_entity(meta::size<_Capacity> capacity) const noexcept;
 
-using true_type = bool_constant<true>;
-constexpr auto true_v = true_type{};
+    template<size_t _Capacity>
+    constexpr auto dynamic_entity(meta::size<_Capacity> capacity) const noexcept;
 
-using false_type = bool_constant<false>;
-constexpr auto false_v = false_type{};
+    constexpr auto fixed() const noexcept;
+    constexpr auto capacity() const noexcept;
 
-DES_META_END
+private:
 
-#endif // __DES_META_TYPES_H_INCLUDED__
+    _Data data_;
+};
+
+
+template<typename... _Values>
+inline constexpr auto make_config(_Values...) noexcept;
+inline constexpr auto make_default_config() noexcept;
+
+DES_CONTEXT_DETAILS_END
+
+#endif // __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__

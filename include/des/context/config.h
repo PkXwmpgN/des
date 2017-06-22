@@ -21,29 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_META_TYPES_H_INCLUDED__
-#define __DES_META_TYPES_H_INCLUDED__
+#ifndef __DES_CONTEXT_CONFIG_H_INCLUDED__
+#define __DES_CONTEXT_CONFIG_H_INCLUDED__
 
-#include <utility>
-#include <cstddef>
 #include "names.h"
+#include "details/config.h"
+#include "details/config.inl"
 
-DES_META_BEGIN
+DES_CONTEXT_BEGIN
 
-template<std::size_t _Size>
-using size = std::integral_constant<decltype(_Size), _Size>;
-template<std::size_t _Size>
-constexpr auto size_v = size<_Size>{};
+inline constexpr auto make_config() noexcept
+{
+    return details::make_default_config();
+}
 
-template<bool _Value>
-using bool_constant = std::integral_constant<bool, _Value>;
+DES_CONTEXT_END
 
-using true_type = bool_constant<true>;
-constexpr auto true_v = true_type{};
-
-using false_type = bool_constant<false>;
-constexpr auto false_v = false_type{};
-
-DES_META_END
-
-#endif // __DES_META_TYPES_H_INCLUDED__
+#endif // __DES_CONTEXT_CONFIG_H_INCLUDED__
