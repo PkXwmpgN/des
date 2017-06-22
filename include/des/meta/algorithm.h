@@ -55,6 +55,20 @@ inline constexpr auto get(const _Tuple & tuple, _Predicate pred) noexcept
     });
 }
 
+template<typename _Tuple, typename _Predicate>
+inline constexpr auto copy(const _Tuple & tuple, _Predicate pred) noexcept
+{
+    return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
+    {
+        return std::tuple_cat([](const auto & value, auto pred)
+        {
+            return if_(pred(value))
+                .then_([&value](){ return std::make_tuple(value); })
+                .else_([](){ return std::make_tuple(); })();
+        }(std::get<Is>(tuple), pred)...);
+    });
+}
+
 DES_META_END
 
 #endif // __DES_META_ALGORITHM_H_INCLUDED__
