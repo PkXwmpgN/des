@@ -47,16 +47,13 @@ private:
 template<typename _Buffers>
 struct storage_maker
 {
-    template<size_t _Capacity>
-    constexpr auto fixed(meta::size<_Capacity> capacity) const noexcept;
-
-    template<size_t _Capacity>
-    constexpr auto dynamic(meta::size<_Capacity> capacity) const noexcept;
+    template<typename _Config>
+    constexpr auto make(_Config && config) const noexcept;
 
 private:
 
     template<typename _Config>
-    auto make_storage(_Config && cfg) const noexcept;
+    auto make_storage(_Config && config) const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

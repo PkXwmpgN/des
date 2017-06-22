@@ -24,7 +24,6 @@ IN THE SOFTWARE.
 #include <cassert>
 #include <type_traits>
 
-#include "config.h"
 #include "des/meta/algorithm.h"
 
 DES_COMPONENT_DETAILS_BEGIN
@@ -74,33 +73,21 @@ inline decltype(auto) storage<_Data>::
 }
 
 template<typename _Buffers>
-template<size_t _Capacity>
-inline constexpr auto storage_maker<_Buffers>::
-    fixed(meta::size<_Capacity> capacity) const noexcept
+template<typename _Config>
+inline constexpr auto storage_maker<_Buffers>::make(_Config && config) const noexcept
 {
-    constexpr auto cfg = make_config(meta::true_v, capacity);
-    return decltype(make_storage(std::move(cfg))){};
-}
-
-template<typename _Buffers>
-template<size_t _Capacity>
-inline constexpr auto storage_maker<_Buffers>::
-    dynamic(meta::size<_Capacity> capacity) const noexcept
-{
-    constexpr auto cfg = make_config(meta::false_v, capacity);
-    return decltype(make_storage(std::move(cfg))){};
+    return decltype(make_storage(std::forward<_Config>(config))){};
 }
 
 template<typename _Buffers>
 template<typename _Config>
-inline auto storage_maker<_Buffers>::
-    make_storage(_Config && cfg) const noexcept
+inline auto storage_maker<_Buffers>::make_storage(_Config && cfg) const noexcept
 {
-    decltype(auto) data = meta::transform(_Buffers{}, [&cfg](auto buffer)
+    auto result = meta::transform(_Buffers{}, [&cfg](auto buffer)
     {
         return buffer.make(std::forward<_Config>(cfg));
     });
-    return storage<std::decay_t<decltype(data)>>{};
+    return storage<std::decay_t<decltype(result)>>{};
 }
 
 DES_COMPONENT_DETAILS_END

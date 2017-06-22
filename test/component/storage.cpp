@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cassert>
+#include <des/context/config.h>
 #include <des/component/component.h>
 #include <des/component/buffer.h>
 #include <des/component/storage.h>
@@ -36,7 +37,8 @@ int main()
     constexpr auto buffer2 = des::component::make_buffer(component2);
 
     constexpr auto fstorage = des::component::make_storage(buffer1, buffer2)
-        .fixed(des::meta::size_v<1000>);
+        .make(des::context::make_config());
+
 
     auto storage = std::decay_t<decltype(fstorage)>{};
     storage.get(component1, ide(1)).x = 10;
