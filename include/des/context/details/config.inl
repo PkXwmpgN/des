@@ -32,8 +32,9 @@ namespace /* anonymous */
 {
     namespace keys
     {
-        constexpr auto fixed = meta::size_v<0>;
-        constexpr auto capacity = meta::size_v<1>;
+        constexpr auto components = meta::size_v<0>;
+        constexpr auto fixed = meta::size_v<1>;
+        constexpr auto capacity = meta::size_v<2>;
     }
 
     template<typename _Data, typename _Key, typename _Value>
@@ -69,7 +70,6 @@ namespace /* anonymous */
     }
 }
 
-
 template<typename _Data>
 template<size_t _Capacity>
 constexpr auto config<_Data>::
@@ -91,6 +91,13 @@ constexpr auto config<_Data>::
 }
 
 template<typename _Data>
+constexpr auto config<_Data>::components() const noexcept
+{
+    using result = decltype(get(data_, keys::components));
+    return result{};
+}
+
+template<typename _Data>
 constexpr auto config<_Data>::fixed() const noexcept
 {
     using result = decltype(get(data_, keys::fixed));
@@ -104,17 +111,18 @@ constexpr auto config<_Data>::capacity() const noexcept
     return result{};
 }
 
-
 template<typename... _Values>
 inline constexpr auto make_config(_Values...) noexcept
 {
-    constexpr auto list = std::tuple<_Values...>{};
-    return config<std::decay_t<decltype(list)>>{};
+    return config<std::tuple<_Values...>>{};
 }
 
-inline constexpr auto make_default_config() noexcept
+template<typename... _Components>
+inline constexpr auto make_default_config(_Components &&... components) noexcept
 {
-    return make_config(std::make_pair(keys::fixed, meta::true_v),
+    auto list = std::make_tuple(std::forward<_Components>(components)...);
+    return make_config(std::make_pair(keys::components, list),
+                       std::make_pair(keys::fixed, meta::true_v),
                        std::make_pair(keys::capacity, meta::size_v<1024>));
 }
 

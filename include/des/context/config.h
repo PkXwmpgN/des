@@ -30,9 +30,11 @@ IN THE SOFTWARE.
 
 DES_CONTEXT_BEGIN
 
-inline constexpr auto make_config() noexcept
+template<typename... _Components>
+inline constexpr auto make_config(_Components &&... components) noexcept
 {
-    return details::make_default_config();
+    static_assert(sizeof...(components) > 0, "");
+    return details::make_default_config(std::forward<_Components>(components)...);
 }
 
 DES_CONTEXT_END

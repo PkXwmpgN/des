@@ -37,7 +37,7 @@ int main()
     constexpr auto buffer2 = des::component::make_buffer(component2);
 
     constexpr auto fstorage = des::component::make_storage(buffer1, buffer2)
-        .make(des::context::make_config());
+        .make(des::context::make_config(component1, component2));
 
 
     auto storage = std::decay_t<decltype(fstorage)>{};
