@@ -33,6 +33,16 @@ IN THE SOFTWARE.
 DES_META_BEGIN
 
 template<typename _Tuple, typename _Function>
+inline constexpr void foreach(const _Tuple & tuple, _Function fn) noexcept
+{
+    details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
+    {
+        auto temp = { (fn(std::get<Is>(tuple)), 0)... };
+        (void)temp;
+    });
+}
+
+template<typename _Tuple, typename _Function>
 inline constexpr auto transform(const _Tuple & tuple, _Function fn) noexcept
 {
     return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
