@@ -28,36 +28,36 @@ IN THE SOFTWARE.
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Self, typename _Components>
+template<typename _Self, typename _Data>
 template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Components>::get(_Component && component,
+inline decltype(auto) buffer_base<_Self, _Data>::get(_Component &&,
         _Id && ide) const noexcept
 {
     assert(ide.value() < self().data().size());
 
-    using component_type = std::decay_t<decltype(component)>;
+    using component_type = std::decay_t<_Component>;
     return std::get<component_type>(self().data()[ide.value()]);
 }
 
-template<typename _Self, typename _Components>
+template<typename _Self, typename _Data>
 template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Components>::get(_Component && component,
+inline decltype(auto) buffer_base<_Self, _Data>::get(_Component &&,
         _Id && ide) noexcept
 {
     assert(ide.value() < self().data().size());
 
-    using component_type = std::decay_t<decltype(component)>;
+    using component_type = std::decay_t<_Component>;
     return std::get<component_type>(self().data()[ide.value()]);
 }
 
-template<typename _Self, typename _Components>
-inline auto buffer_base<_Self, _Components>::size() const noexcept
+template<typename _Self, typename _Data>
+inline auto buffer_base<_Self, _Data>::size() const noexcept
 {
     return self().data().size();
 }
 
-template<typename _Self, typename _Components>
-inline decltype(auto) buffer_base<_Self, _Components>::self() const noexcept
+template<typename _Self, typename _Data>
+inline decltype(auto) buffer_base<_Self, _Data>::self() const noexcept
 {
     return static_cast<const self_type&>(*this);
 }
@@ -68,27 +68,31 @@ inline decltype(auto) buffer_base<_Self, _Components>::self() noexcept
     return static_cast<self_type&>(*this);
 }
 
-template<typename _Components, typename _Capacity>
-inline buffer_dynamic<_Components, _Capacity>::buffer_dynamic()
+template<typename _Data, typename _Capacity>
+inline buffer_dynamic<_Data, _Capacity>::buffer_dynamic()
 {
     data_.reserve(_Capacity::value);
 }
 
-template<typename _Components>
+template<typename... _Components>
 template<typename _Config>
-inline constexpr auto buffer_maker<_Components>::make(_Config cfg) noexcept
+inline constexpr auto data_maker<_Components...>::make(const _Config &) const noexcept
 {
+    return std::tuple<_Components...>{};
+}
+
+template<typename _Maker>
+template<typename _Config>
+inline constexpr auto buffer_maker<_Maker>::make(const _Config & cfg) const noexcept
+{
+    auto maker = _Maker{};
+
+    using capacity_type = std::decay_t<decltype(cfg.capacity())>;
+    using data_type = std::decay_t<decltype(maker.make(cfg))>;
+
     return meta::if_(cfg.fixed())
-        .then_([](auto cfg)
-        {
-            using capacity_type = std::decay_t<decltype(cfg.capacity())>;
-            return buffer_fixed<_Components, capacity_type>{};
-        })
-        .else_([](auto cfg)
-        {
-            using capacity_type = std::decay_t<decltype(cfg.capacity())>;
-            return buffer_dynamic<_Components, capacity_type>{};
-        })(cfg);
+        .then_([](){ return buffer_fixed<data_type, capacity_type>{}; })
+        .else_([](){ return buffer_dynamic<data_type, capacity_type>{}; })();
 }
 
 DES_COMPONENT_DETAILS_END

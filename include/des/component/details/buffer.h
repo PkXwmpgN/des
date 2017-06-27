@@ -29,12 +29,12 @@ IN THE SOFTWARE.
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Self, typename _Components>
+template<typename _Self, typename _Data>
 struct buffer_base
 {
 public:
 
-    using component_list = _Components;
+    using data_type = _Data;
     using self_type = _Self;
 
     buffer_base() = default;
@@ -51,17 +51,20 @@ public:
 
     auto size() const noexcept;
 
+    template<typename _Component>
+    constexpr auto contains(_Component && component) const noexcept;
+
 private:
 
     decltype(auto) self() const noexcept;
     decltype(auto) self() noexcept;
 };
 
-template<typename _Components, typename _Capacity>
+template<typename _Data, typename _Capacity>
 struct buffer_fixed final :
-    buffer_base<buffer_fixed<_Components, _Capacity>, _Components>
+    buffer_base<buffer_fixed<_Data, _Capacity>, _Data>
 {
-    using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
+    using base_type = buffer_base<buffer_fixed<_Data, _Capacity>, _Data>;
     friend base_type;
 
 private:
@@ -71,14 +74,14 @@ private:
 
 private:
 
-    std::array<_Components, _Capacity::value> data_;
+    std::array<_Data, _Capacity::value> data_;
 };
 
-template<typename _Components, typename _Capacity>
+template<typename _Data, typename _Capacity>
 struct buffer_dynamic final :
-    buffer_base<buffer_dynamic<_Components, _Capacity>, _Components>
+    buffer_base<buffer_dynamic<_Data, _Capacity>, _Data>
 {
-    using base_type = buffer_base<buffer_fixed<_Components, _Capacity>, _Components>;
+    using base_type = buffer_base<buffer_fixed<_Data, _Capacity>, _Data>;
     friend base_type;
 
 public:
@@ -92,14 +95,21 @@ private:
 
 private:
 
-    std::vector<_Components> data_;
+    std::vector<_Data> data_;
 };
 
-template<typename _Components>
+template<typename... _Components>
+struct data_maker
+{
+    template<typename _Config>
+    constexpr auto make(const _Config & cfg) const noexcept;
+};
+
+template<typename _Maker>
 struct buffer_maker
 {
     template<typename _Config>
-    constexpr auto make(_Config cfg) noexcept;
+    constexpr auto make(const _Config & cfg) const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

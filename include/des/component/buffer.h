@@ -36,8 +36,8 @@ DES_COMPONENT_BEGIN
 template<typename... _Components>
 inline constexpr auto make_buffer(_Components...) noexcept
 {
-    constexpr auto list = std::tuple<_Components...>{};
-    return details::buffer_maker<std::decay_t<decltype(list)>>{};
+    using data_maker_type = details::data_maker<_Components...>;
+    return details::buffer_maker<data_maker_type>{};
 }
 
 DES_COMPONENT_END

@@ -24,20 +24,23 @@ IN THE SOFTWARE.
 #include <cassert>
 #include <type_traits>
 
+#include "des/meta/traits.h"
 #include "des/meta/algorithm.h"
 
 DES_COMPONENT_DETAILS_BEGIN
 
 namespace /* anonymous */
 {
+    template<typename _Buffer, typename _Component>
+    constexpr auto contains_v = meta::is_tuple_contains<std::decay_t<_Component>,
+                                        typename std::decay_t<_Buffer>::data_type>{};
+
     template<typename _Component, typename _Data>
-    inline decltype(auto) get_buffer(_Component &&, _Data && data) noexcept
+    inline decltype(auto) get_buffer(_Component && component, _Data && data) noexcept
     {
-        auto result = meta::get(data, [](auto && buffer)
+        auto result = meta::get(data, [&component](auto && buffer)
         {
-            using buffer_type = std::decay_t<decltype(buffer)>;
-            using buffer_component_list = typename buffer_type::component_list;
-            return meta::is_tuple_contains<std::decay_t<_Component>, buffer_component_list>{};
+            return contains_v<decltype(buffer), decltype(component)>;
         });
 
         using result_type = std::decay_t<decltype(result)>;
