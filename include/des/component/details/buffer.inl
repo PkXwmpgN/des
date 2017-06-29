@@ -83,7 +83,7 @@ inline constexpr auto data_maker<_Components...>::make(const _Config &) const no
 
 template<typename _Maker>
 template<typename _Config>
-inline constexpr auto buffer_maker<_Maker>::make(const _Config & cfg) const noexcept
+inline auto buffer_maker<_Maker>::make(const _Config & cfg) const noexcept
 {
     auto maker = _Maker{};
 

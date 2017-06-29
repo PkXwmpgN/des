@@ -51,9 +51,6 @@ public:
 
     auto size() const noexcept;
 
-    template<typename _Component>
-    constexpr auto contains(_Component && component) const noexcept;
-
 private:
 
     decltype(auto) self() const noexcept;
@@ -109,7 +106,7 @@ template<typename _Maker>
 struct buffer_maker
 {
     template<typename _Config>
-    constexpr auto make(const _Config & cfg) const noexcept;
+    auto make(const _Config & cfg) const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END
