@@ -21,33 +21,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_ENTITY_HANDLE_H_INCLUDED__
-#define __DES_ENTITY_HANDLE_H_INCLUDED__
+#ifndef __DES_ENTITY_DETAILS_H_INCLUDED__
+#define __DES_ENTITY_DETAILS_H_INCLUDED__
 
-#include "names.h"
-#include "id_entity.h"
-#include "id_generation.h"
+#include <utility>
 
-DES_ENTITY_BEGIN
+DES_ENTITY_DETAILS_BEGIN
 
-struct handle
+template<typename _Marker>
+struct entity
 {
-public:
+    template<typename _Component>
+    void register_component(_Component && component) noexcept
+    {
+        marker_.set(std::forward<_Component>(component));
+    }
 
-    handle(id_entity ide, id_generation idg) noexcept
-        : id_(ide)
-        , gen_(idg)
-    {}
+    template<typename _Component>
+    void unregister_component(_Component && component) noexcept
+    {
+        marker_.reset(std::forward<_Component>(component));
+    }
 
-    auto get_id() const noexcept { return id_; }
-    auto get_generation() const noexcept { return gen_; }
+    template<typename _Component>
+    auto test_component(_Component && component) const noexcept
+    {
+        return marker_.test(std::forward<_Component>(component));
+    }
+
+    void reset() noexcept
+    {
+        marker_.reset();
+    }
+
+    const auto & marker() const noexcept { return marker_; }
 
 private:
 
-    id_entity id_;
-    id_generation gen_;
+    _Marker marker_;
 };
 
-DES_ENTITY_END
+DES_ENTITY_DETAILS_END
 
-#endif // __DES_ENTITY_HANDLE_H_INCLUDED__
+#endif // __DES_ENTITY_DETAILS_H_INCLUDED__

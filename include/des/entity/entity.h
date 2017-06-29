@@ -21,19 +21,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_ENTITY_ID_GENERATION_H_INCLUDED__
-#define __DES_ENTITY_ID_GENERATION_H_INCLUDED__
+#ifndef __DES_ENTITY_ENTITY_H_INCLUDED__
+#define __DES_ENTITY_ENTITY_H_INCLUDED__
 
 #include <cstdint>
 
 #include "names.h"
-#include "details/id_integral.h"
+#include "details/identificator.h"
 
 DES_ENTITY_BEGIN
 
-struct id_generation_typesafe_tag {};
-using id_generation = details::id_integral<std::uint32_t, id_generation_typesafe_tag>;
+struct entity_identificator_tag {};
+using entity_id = details::identificator<std::uint32_t, entity_identificator_tag>;
+
+inline constexpr auto make_entity_id(const entity_id::integral_type & value) noexcept
+{
+    return entity_id{value};
+}
 
 DES_ENTITY_END
 
-#endif // __DES_ENTITY_ID_GENERATION_H_INCLUDED__
+#endif // __DES_ENTITY_ENTITY_H_INCLUDED__

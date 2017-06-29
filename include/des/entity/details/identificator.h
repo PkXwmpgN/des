@@ -21,32 +21,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_ENTITY_DETAILS_INTEGRAL_ID_H_INCLUDED__
-#define __DES_ENTITY_DETAILS_INTEGRAL_ID_H_INCLUDED__
+#ifndef __DES_ENTITY_DETAILS_IDENTIFICATOR_H_INCLUDED__
+#define __DES_ENTITY_DETAILS_IDENTIFICATOR_H_INCLUDED__
 
 #include <limits>
 
 DES_ENTITY_DETAILS_BEGIN
 
 template<typename _Integral>
-constexpr auto invalid_integral_value = std::numeric_limits<_Integral>::max();
+constexpr auto invalid_identificator_value = std::numeric_limits<_Integral>::max();
 
 template<typename _Integral, typename _Tag>
-struct id_integral
+struct identificator
 {
 public:
 
     using integral_type = _Integral;
 
-    constexpr id_integral() noexcept
-        : this{invalid_integral_value<integral_type>}
+    constexpr identificator() noexcept
+        : identificator(invalid_identificator_value<integral_type>)
     {}
 
-    constexpr explicit id_integral(integral_type value) noexcept
+    constexpr explicit identificator(integral_type value) noexcept
         : id_{value}
     {}
 
-    constexpr auto value() const { return id_; } noexcept
+    constexpr auto value() const noexcept { return id_; }
 
 private:
 
@@ -54,25 +54,25 @@ private:
 };
 
 template<typename _Integral, typename _Tag>
-constexpr inline operator == (id_integral<_Integral, _Tag> l,
-    id_integral<_Integral, _Tag> r) noexcept
+inline constexpr bool operator == (identificator<_Integral, _Tag> l,
+    identificator<_Integral, _Tag> r) noexcept
 {
     return l.value() == r.value();
 }
 
 template<typename _Integral, typename _Tag>
-constexpr inline operator != (id_integral<_Integral, _Tag> l,
-    id_integral<_Integral, _Tag> r) noexcept
+inline constexpr bool operator != (identificator<_Integral, _Tag> l,
+    identificator<_Integral, _Tag> r) noexcept
 {
     return !(l == r);
 }
 
 template<typename _Integral, typename _Tag>
-constexpr inline bool is_valid(id_integral<_Integral, _Tag> iid) noexcept
+inline constexpr bool is_valid(identificator<_Integral, _Tag> iid) noexcept
 {
-    return iid.value() == invalid_integral_value<_Integral>;
+    return iid.value() == invalid_identificator_value<_Integral>;
 }
 
 DES_ENTITY_DETAILS_END
 
-#endif // __DES_ENTITY_DETAILS_INTEGRAL_ID_H_INCLUDED__
+#endif // __DES_ENTITY_DETAILS_IDENTIFICATOR_H_INCLUDED__

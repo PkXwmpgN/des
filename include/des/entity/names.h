@@ -25,10 +25,10 @@ IN THE SOFTWARE.
 #define __DES_ENTITY_NAMES_H_INCLUDED__
 
 #define DES_ENTITY_BEGIN \
-namespace des { namespace meta {
+namespace des { namespace entity {
 
 #define DES_ENTITY_END \
-} /* meta */ } /* des */
+} /* entity */ } /* des */
 
 #define DES_ENTITY_DETAILS_BEGIN \
 DES_ENTITY_BEGIN \
