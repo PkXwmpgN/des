@@ -63,12 +63,6 @@ inline decltype(auto) buffer_base<_Self, _Data>::self() noexcept
     return static_cast<self_type&>(*this);
 }
 
-template<typename _Data, typename _Capacity>
-inline buffer_dynamic<_Data, _Capacity>::buffer_dynamic()
-{
-    data_.reserve(_Capacity::value);
-}
-
 template<typename _Marker>
 template<typename _Config>
 constexpr auto data_maker<_Marker>::make(const _Config &) const noexcept
