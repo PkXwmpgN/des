@@ -77,20 +77,20 @@ inline decltype(auto) storage<_Data>::
 
 template<typename _Buffers>
 template<typename _Config>
-inline constexpr auto storage_maker<_Buffers>::make(_Config && config) const noexcept
+inline auto storage_maker<_Buffers>::make(_Config && config) const noexcept
 {
-    return decltype(make_storage(std::forward<_Config>(config))){};
+    using data_type = std::decay_t<decltype(make_data(std::forward<_Config>(config)))>;
+    return storage<data_type>{};
 }
 
 template<typename _Buffers>
 template<typename _Config>
-inline auto storage_maker<_Buffers>::make_storage(_Config && cfg) const noexcept
+inline auto storage_maker<_Buffers>::make_data(_Config && cfg) const noexcept
 {
-    auto result = meta::transform(_Buffers{}, [&cfg](auto buffer)
+    return meta::transform(_Buffers{}, [&cfg](auto buffer)
     {
         return buffer.make(std::forward<_Config>(cfg));
     });
-    return storage<std::decay_t<decltype(result)>>{};
 }
 
 DES_COMPONENT_DETAILS_END

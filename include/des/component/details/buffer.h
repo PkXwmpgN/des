@@ -78,21 +78,17 @@ template<typename _Data, typename _Capacity>
 struct buffer_dynamic final :
     buffer_base<buffer_dynamic<_Data, _Capacity>, _Data>
 {
-    using base_type = buffer_base<buffer_fixed<_Data, _Capacity>, _Data>;
+    using base_type = buffer_base<buffer_dynamic<_Data, _Capacity>, _Data>;
     friend base_type;
-
-public:
-
-    buffer_dynamic();
 
 private:
 
     const auto & data() const noexcept { return data_; }
-    auto data() noexcept { return data_; }
+    auto & data() noexcept { return data_; }
 
 private:
 
-    std::vector<_Data> data_;
+    std::vector<_Data> data_ = std::vector<_Data>(_Capacity::value);
 };
 
 template<typename... _Components>
