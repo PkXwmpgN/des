@@ -56,6 +56,12 @@ auto marker<_Components>::test(_Component && component) const noexcept
 }
 
 template<typename _Components>
+void marker<_Components>::reset() noexcept
+{
+    bits_.reset();
+}
+
+template<typename _Components>
 template<typename _Component>
 constexpr auto marker<_Components>::get_index(_Component &&) const noexcept
 {

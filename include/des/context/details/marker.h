@@ -47,6 +47,8 @@ struct marker
     template<typename _Component>
     auto test(_Component && component) const noexcept;
 
+    void reset() noexcept;
+
 private:
 
     template<typename _Component>

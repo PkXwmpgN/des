@@ -39,7 +39,6 @@ public:
     template<size_t _Capacity>
     constexpr auto dynamic_entity(meta::size<_Capacity> capacity) const noexcept;
 
-    constexpr auto components() const noexcept;
     constexpr auto fixed() const noexcept;
     constexpr auto capacity() const noexcept;
 
@@ -51,9 +50,7 @@ private:
 
 template<typename... _Values>
 inline constexpr auto make_config(_Values...) noexcept;
-
-template<typename... _Components>
-inline constexpr auto make_default_config(_Components &&...) noexcept;
+inline constexpr auto make_default_config() noexcept;
 
 DES_CONTEXT_DETAILS_END
 
