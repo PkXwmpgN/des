@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_COMPONENT_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_COMPONENT_H_INCLUDED__
 
+#include <utility>
 #include "des/meta/traits.h"
 
 DES_COMPONENT_DETAILS_BEGIN
@@ -32,6 +33,12 @@ template<typename _Type>
 struct handle : _Type
 {
     using underlying_type = _Type;
+
+    static_assert(std::is_move_constructible<underlying_type>::value, "");
+    static_assert(std::is_move_assignable<underlying_type>::value, "");
+    static_assert(std::is_nothrow_move_constructible<underlying_type>::value, "");
+    static_assert(std::is_nothrow_move_assignable<underlying_type>::value, "");
+
 };
 
 template<typename _Type>
