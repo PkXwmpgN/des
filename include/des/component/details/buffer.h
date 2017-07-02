@@ -92,7 +92,7 @@ private:
 };
 
 template<typename... _Components>
-struct data_maker
+struct buffer_data_maker
 {
     template<typename _Config>
     constexpr auto make(const _Config & cfg) const noexcept;

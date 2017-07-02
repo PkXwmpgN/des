@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
+#include <tuple>
 #include <cassert>
 #include <type_traits>
 
@@ -75,22 +76,26 @@ inline decltype(auto) storage<_Data>::
                       std::forward<_Id>(id));
 }
 
-template<typename _Buffers>
+template<typename... _Buffers>
 template<typename _Config>
-inline auto storage_maker<_Buffers>::make(_Config && config) const noexcept
+inline auto storage_data_maker<_Buffers...>::make(const _Config & config) const noexcept
 {
-    using data_type = std::decay_t<decltype(make_data(std::forward<_Config>(config)))>;
+    auto list = std::make_tuple(_Buffers{}...);
+    return meta::transform(list, [&config](auto & buffer)
+    {
+        return buffer.make(config);
+    });
+}
+
+template<typename _Maker>
+template<typename _Config>
+inline auto storage_maker<_Maker>::make(const _Config & config) const noexcept
+{
+    auto maker = _Maker{};
+    using data_type = std::decay_t<decltype(maker.make(config))>;
     return storage<data_type>{};
 }
 
-template<typename _Buffers>
-template<typename _Config>
-inline auto storage_maker<_Buffers>::make_data(_Config && cfg) const noexcept
-{
-    return meta::transform(_Buffers{}, [&cfg](auto buffer)
-    {
-        return buffer.make(std::forward<_Config>(cfg));
-    });
-}
+
 
 DES_COMPONENT_DETAILS_END

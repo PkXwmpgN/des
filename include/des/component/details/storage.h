@@ -44,16 +44,18 @@ private:
     _Data data_;
 };
 
-template<typename _Buffers>
+template<typename... _Buffers>
+struct storage_data_maker
+{
+    template<typename _Config>
+    auto make(const _Config & config) const noexcept;
+};
+
+template<typename _Maker>
 struct storage_maker
 {
     template<typename _Config>
-    auto make(_Config && config) const noexcept;
-
-private:
-
-    template<typename _Config>
-    auto make_data(_Config && config) const noexcept;
+    auto make(const _Config & config) const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

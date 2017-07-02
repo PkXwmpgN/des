@@ -70,7 +70,7 @@ inline decltype(auto) buffer_base<_Self, _Components>::self() noexcept
 
 template<typename... _Components>
 template<typename _Config>
-inline constexpr auto data_maker<_Components...>::make(const _Config &) const noexcept
+inline constexpr auto buffer_data_maker<_Components...>::make(const _Config &) const noexcept
 {
     return std::tuple<_Components...>{};
 }

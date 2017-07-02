@@ -36,7 +36,7 @@ DES_COMPONENT_BEGIN
 template<typename... _Components>
 inline constexpr auto make_buffer(_Components...) noexcept
 {
-    using data_maker_type = details::data_maker<_Components...>;
+    using data_maker_type = details::buffer_data_maker<_Components...>;
     return details::buffer_maker<data_maker_type>{};
 }
 

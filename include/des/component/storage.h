@@ -24,8 +24,6 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_STORAGE_H_INCLUDED__
 #define __DES_COMPONENT_STORAGE_H_INCLUDED__
 
-#include <tuple>
-
 #include "names.h"
 #include "details/storage.h"
 #include "details/storage.inl"
@@ -35,8 +33,8 @@ DES_COMPONENT_BEGIN
 template<typename... _Buffers>
 inline constexpr auto make_storage(_Buffers...) noexcept
 {
-    constexpr auto list = std::tuple<_Buffers...>{};
-    return details::storage_maker<std::decay_t<decltype(list)>>{};
+    using data_maker_type = details::storage_data_maker<_Buffers...>;
+    return details::storage_maker<data_maker_type>{};
 }
 
 DES_COMPONENT_END
