@@ -37,7 +37,7 @@ namespace /* anonymous */
 
 template<typename _Data>
 template<size_t _Capacity>
-constexpr auto config<_Data>::
+inline constexpr auto config<_Data>::
     fixed_entity(meta::size<_Capacity> capacity) const noexcept
 {
     using type1 = decltype(meta::options::set(data_, keys::fixed, meta::true_v));
@@ -47,7 +47,7 @@ constexpr auto config<_Data>::
 
 template<typename _Data>
 template<size_t _Capacity>
-constexpr auto config<_Data>::
+inline constexpr auto config<_Data>::
     dynamic_entity(meta::size<_Capacity> capacity) const noexcept
 {
     using type1 = decltype(meta::options::set(data_, keys::fixed, meta::false_v));
@@ -56,14 +56,14 @@ constexpr auto config<_Data>::
 }
 
 template<typename _Data>
-constexpr auto config<_Data>::fixed() const noexcept
+inline constexpr auto config<_Data>::fixed() const noexcept
 {
     using result = decltype(meta::options::get(data_, keys::fixed));
     return result{};
 }
 
 template<typename _Data>
-constexpr auto config<_Data>::capacity() const noexcept
+inline constexpr auto config<_Data>::capacity() const noexcept
 {
     using result = decltype(meta::options::get(data_, keys::capacity));
     return result{};
