@@ -21,34 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__
-#define __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__
+#ifndef __DES_DATA_CONFIG_H_INCLUDED__
+#define __DES_DATA_CONFIG_H_INCLUDED__
 
-#include "des/meta/types.h"
+#include "names.h"
+#include "details/config.h"
+#include "details/config.inl"
 
-DES_CONTEXT_DETAILS_BEGIN
+DES_DATA_BEGIN
 
-template<typename _Data>
-struct config
+inline constexpr auto make_config() noexcept
 {
-public:
+    return details::make_default_config();
+}
 
-    template<size_t _Capacity>
-    constexpr auto fixed_entity(meta::size<_Capacity> capacity) const noexcept;
+DES_DATA_END
 
-    template<size_t _Capacity>
-    constexpr auto dynamic_entity(meta::size<_Capacity> capacity) const noexcept;
-
-    constexpr auto fixed() const noexcept;
-    constexpr auto capacity() const noexcept;
-
-private:
-
-    _Data data_;
-};
-
-inline constexpr auto make_default_config() noexcept;
-
-DES_CONTEXT_DETAILS_END
-
-#endif // __DES_CONTEXT_DETAILS_CONFIG_H_INCLUDED__
+#endif // __DES_DATA_CONFIG_H_INCLUDED__

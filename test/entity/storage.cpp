@@ -2,7 +2,7 @@
 
 #include <des/component/component.h>
 #include <des/context/marker.h>
-#include <des/context/config.h>
+#include <des/data/config.h>
 #include <des/entity/entity.h>
 #include <des/entity/buffer.h>
 #include <des/entity/storage.h>
@@ -21,13 +21,13 @@ constexpr auto storage = des::entity::make_storage(buffer);
 
 namespace fixed
 {
-    constexpr auto config = des::context::make_config()
+    constexpr auto config = des::data::make_config()
         .fixed_entity(des::meta::size_v<2>);
 }
 
 namespace dynamic
 {
-    constexpr auto config = des::context::make_config()
+    constexpr auto config = des::data::make_config()
         .dynamic_entity(des::meta::size_v<2>);
 }
 

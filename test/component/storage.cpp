@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include <des/context/config.h>
+#include <des/data/config.h>
 #include <des/component/component.h>
 #include <des/component/buffer.h>
 #include <des/component/storage.h>
@@ -39,7 +39,7 @@ template<typename _Storage>
 void test(const _Storage & storage)
 {
     {
-        constexpr auto config = des::context::make_config()
+        constexpr auto config = des::data::make_config()
             .fixed_entity(des::meta::size_v<2>);
 
         constexpr auto eid1 = des::entity::make_entity_id(0);
@@ -55,7 +55,7 @@ void test(const _Storage & storage)
     }
 
     {
-        constexpr auto config = des::context::make_config()
+        constexpr auto config = des::data::make_config()
             .dynamic_entity(des::meta::size_v<2>);
 
         constexpr auto eid1 = des::entity::make_entity_id(0);

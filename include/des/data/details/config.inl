@@ -24,7 +24,7 @@ IN THE SOFTWARE.
 #include <tuple>
 #include "des/meta/options.h"
 
-DES_CONTEXT_DETAILS_BEGIN
+DES_DATA_DETAILS_BEGIN
 
 namespace /* anonymous */
 {
@@ -74,4 +74,4 @@ inline constexpr auto make_default_config() noexcept
     return config<des::meta::options::empty>{}.fixed_entity(meta::size_v<1024>);
 }
 
-DES_CONTEXT_DETAILS_END
+DES_DATA_DETAILS_END

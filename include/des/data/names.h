@@ -21,20 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_CONTEXT_CONFIG_H_INCLUDED__
-#define __DES_CONTEXT_CONFIG_H_INCLUDED__
+#ifndef __DES_DATA_NAMES_H_INCLUDED__
+#define __DES_DATA_NAMES_H_INCLUDED__
 
-#include "names.h"
-#include "details/config.h"
-#include "details/config.inl"
+#define DES_DATA_BEGIN \
+namespace des { namespace data {
 
-DES_CONTEXT_BEGIN
+#define DES_DATA_END \
+} /* data */ } /* des */
 
-inline constexpr auto make_config() noexcept
-{
-    return details::make_default_config();
-}
+#define DES_DATA_DETAILS_BEGIN \
+DES_DATA_BEGIN \
+namespace details {
 
-DES_CONTEXT_END
+#define DES_DATA_DETAILS_END \
+DES_DATA_END \
+} /* details */
 
-#endif // __DES_CONTEXT_CONFIG_H_INCLUDED__
+#endif // __DES_DATA_NAMES_H_INCLUDED__

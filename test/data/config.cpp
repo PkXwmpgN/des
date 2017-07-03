@@ -1,19 +1,19 @@
 #include <utility>
 #include <tuple>
 
-#include <des/context/config.h>
+#include <des/data/config.h>
 
 int main()
 {
     {
-        constexpr auto config = des::context::make_config();
+        constexpr auto config = des::data::make_config();
 
         static_assert(config.fixed() == true, "");
         static_assert(config.capacity() == 1024, "");
     }
 
     {
-        constexpr auto config = des::context::make_config()
+        constexpr auto config = des::data::make_config()
             .fixed_entity(des::meta::size_v<10>);
 
         static_assert(config.fixed() == true, "");
@@ -21,7 +21,7 @@ int main()
     }
 
     {
-        constexpr auto config = des::context::make_config()
+        constexpr auto config = des::data::make_config()
             .dynamic_entity(des::meta::size_v<100>);
 
         static_assert(config.fixed() == false, "");
