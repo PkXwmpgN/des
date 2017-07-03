@@ -23,7 +23,7 @@ IN THE SOFTWARE.
 
 #include "des/meta/algorithm.h"
 
-DES_CONTEXT_DETAILS_BEGIN
+DES_COMPONENT_DETAILS_BEGIN
 
 template<typename _Components>
 inline constexpr auto marker<_Components>::size() const noexcept
@@ -84,4 +84,4 @@ inline void fill_marker(_Marker && marker, _Components && ... components)
     });
 }
 
-DES_CONTEXT_DETAILS_END
+DES_COMPONENT_DETAILS_END

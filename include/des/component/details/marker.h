@@ -21,28 +21,54 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_CONTEXT_MARKER_H_INCLUDED__
-#define __DES_CONTEXT_MARKER_H_INCLUDED__
+#ifndef __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
+#define __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
 
-#include "names.h"
-#include "details/marker.h"
-#include "details/marker.inl"
+#include <bitset>
+#include <tuple>
+#include <utility>
 
-DES_CONTEXT_BEGIN
+DES_COMPONENT_DETAILS_BEGIN
+
+template<typename _Components>
+struct marker
+{
+    using componet_list_type = _Components;
+    using bits_type = std::bitset<std::tuple_size<componet_list_type>::value>;
+
+    constexpr auto size() const noexcept;
+
+    template<typename _Component>
+    void set(_Component && component) noexcept;
+
+    template<typename _Component>
+    void reset(_Component && component) noexcept;
+
+    template<typename _Component>
+    auto test(_Component && component) const noexcept;
+
+    void reset() noexcept;
+
+private:
+
+    template<typename _Component>
+    constexpr auto get_index(_Component && component) const noexcept;
+
+private:
+
+    bits_type bits_;
+};
 
 template<typename... _Components>
 inline constexpr auto make_marker(_Components && ... components)
 {
-    return details::make_marker(std::forward<_Components>(components)...);
+    auto list = std::make_tuple(std::forward<_Components>(components)...);
+    return marker<std::decay_t<decltype(list)>>{};
 }
 
 template<typename _Marker, typename... _Components>
-inline void fill_marker(_Marker && marker, _Components && ... components)
-{
-    details::fill_marker(std::forward<_Marker>(marker),
-                         std::forward<_Components>(components)...);
-}
+inline void fill_marker(_Marker && marker, _Components && ... components);
 
-DES_CONTEXT_END
+DES_COMPONENT_DETAILS_END
 
-#endif // __DES_CONTEXT_MARKER_H_INCLUDED__
+#endif // __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
