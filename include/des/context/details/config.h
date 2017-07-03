@@ -47,9 +47,6 @@ private:
     _Data data_;
 };
 
-
-template<typename... _Values>
-inline constexpr auto make_config(_Values...) noexcept;
 inline constexpr auto make_default_config() noexcept;
 
 DES_CONTEXT_DETAILS_END

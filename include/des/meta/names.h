@@ -38,4 +38,12 @@ namespace details {
 DES_META_END \
 } /* details */
 
+#define DES_META_OPTIONS_BEGIN \
+DES_META_BEGIN \
+namespace options {
+
+#define DES_META_OPTIONS_END \
+DES_META_END \
+} /* options */
+
 #endif // __DES_META_NAMES_H_INCLUDED__
