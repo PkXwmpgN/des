@@ -75,11 +75,8 @@ template<typename _Maker>
 template<typename _Config>
 inline auto buffer_maker<_Maker>::make(const _Config & cfg) const noexcept
 {
-    auto maker = _Maker{};
-
-    using capacity_type = std::decay_t<decltype(cfg.capacity())>;
-    using data_type = std::decay_t<decltype(maker.make(cfg))>;
-
+    using capacity_type = decltype(cfg.capacity());
+    using data_type = decltype(std::declval<_Maker>().make(cfg));
     return meta::if_(cfg.fixed())
         .then_([]() { return buffer_fixed<data_type, capacity_type>{}; })
         .else_([]() { return buffer_dynamic<data_type, capacity_type>{}; })();

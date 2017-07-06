@@ -29,11 +29,10 @@ template<typename _Storage>
 template<typename _Config>
 inline auto service_maker<_Storage>::make(const _Config & config) const noexcept
 {
-    auto maker = _Storage{};
     return service
     <
-        std::decay_t<decltype(maker.components().make(config))>,
-        std::decay_t<decltype(maker.entities().make(config))>
+        decltype(std::declval<_Storage>().components().make(config)),
+        decltype(std::declval<_Storage>().entities().make(config))
     >{};
 }
 

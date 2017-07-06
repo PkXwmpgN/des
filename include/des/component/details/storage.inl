@@ -91,8 +91,7 @@ template<typename _Maker>
 template<typename _Config>
 inline auto storage_maker<_Maker>::make(const _Config & config) const noexcept
 {
-    auto maker = _Maker{};
-    using data_type = std::decay_t<decltype(maker.make(config))>;
+    using data_type = decltype(std::declval<_Maker>().make(config));
     return storage<data_type>{};
 }
 
