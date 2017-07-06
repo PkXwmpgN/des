@@ -21,28 +21,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_COMPONENT_MARKER_H_INCLUDED__
-#define __DES_COMPONENT_MARKER_H_INCLUDED__
+#ifndef __DES_COMPONENT_INDEX_H_INCLUDED__
+#define __DES_COMPONENT_INDEX_H_INCLUDED__
 
 #include "names.h"
-#include "details/marker.h"
-#include "details/marker.inl"
+#include "details/index.h"
+#include "details/index.inl"
 
 DES_COMPONENT_BEGIN
 
 template<typename... _Components>
-inline constexpr auto make_marker(_Components && ... components)
+inline constexpr auto make_index(_Components && ... components)
 {
-    return details::make_marker(std::forward<_Components>(components)...);
-}
-
-template<typename _Marker, typename... _Components>
-inline void fill_marker(_Marker && marker, _Components && ... components)
-{
-    details::fill_marker(std::forward<_Marker>(marker),
-                         std::forward<_Components>(components)...);
+    return details::make_index(std::forward<_Components>(components)...);
 }
 
 DES_COMPONENT_END
 
-#endif // __DES_COMPONENT_MARKER_H_INCLUDED__
+#endif // __DES_COMPONENT_INDEX_H_INCLUDED__

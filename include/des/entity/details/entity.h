@@ -28,37 +28,37 @@ IN THE SOFTWARE.
 
 DES_ENTITY_DETAILS_BEGIN
 
-template<typename _Marker>
+template<typename _Index>
 struct entity
 {
     template<typename _Component>
     void register_component(_Component && component) noexcept
     {
-        marker_.set(std::forward<_Component>(component));
+        index_.set(std::forward<_Component>(component), 0);
     }
 
     template<typename _Component>
     void unregister_component(_Component && component) noexcept
     {
-        marker_.reset(std::forward<_Component>(component));
+        index_.reset(std::forward<_Component>(component));
     }
 
     template<typename _Component>
     auto test_component(_Component && component) const noexcept
     {
-        return marker_.test(std::forward<_Component>(component));
+        return index_.test(std::forward<_Component>(component));
     }
 
     void reset() noexcept
     {
-        marker_.reset();
+        index_.reset();
     }
 
-    const auto & marker() const noexcept { return marker_; }
+    const auto & index() const noexcept { return index_; }
 
 private:
 
-    _Marker marker_;
+    _Index index_;
 };
 
 DES_ENTITY_DETAILS_END

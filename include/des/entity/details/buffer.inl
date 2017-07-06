@@ -63,11 +63,12 @@ inline decltype(auto) buffer_base<_Self, _Data>::self() noexcept
     return static_cast<self_type&>(*this);
 }
 
-template<typename _Marker>
+template<typename _Index>
 template<typename _Config>
-constexpr auto data_maker<_Marker>::make(const _Config &) const noexcept
+auto data_maker<_Index>::make(const _Config &) const noexcept
 {
-    return entity<std::decay_t<_Marker>>{};
+    using index_type = decltype(std::declval<_Index>().make());
+    return entity<index_type>{};
 }
 
 template<typename _Maker>

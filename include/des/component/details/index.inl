@@ -26,62 +26,50 @@ IN THE SOFTWARE.
 DES_COMPONENT_DETAILS_BEGIN
 
 template<typename _Components>
-inline constexpr auto marker<_Components>::size() const noexcept
+template<typename _Component>
+inline void index<_Components>::set(_Component && component, value_type value) noexcept
 {
-    return bits_.size();
+    index_[get_index(std::forward<_Component>(component))] = value;
 }
 
 template<typename _Components>
 template<typename _Component>
-void marker<_Components>::set(_Component && component) noexcept
+inline decltype(auto) index<_Components>::get(_Component && component) const noexcept
 {
-    auto index = get_index(std::forward<_Component>(component));
-    bits_.set(index, true);
+    return index_[get_index(std::forward<_Component>(component))];
 }
 
 template<typename _Components>
 template<typename _Component>
-void marker<_Components>::reset(_Component && component) noexcept
+inline void index<_Components>::reset(_Component && component) noexcept
 {
-    auto index = get_index(std::forward<_Component>(component));
-    bits_.set(index, false);
+    set(std::forward<_Component>(component), invalid_index_value<value_type>);
 }
 
 template<typename _Components>
 template<typename _Component>
-auto marker<_Components>::test(_Component && component) const noexcept
+inline auto index<_Components>::test(_Component && component) const noexcept
 {
-    auto index = get_index(std::forward<_Component>(component));
-    return bits_.test(index);
+    return index_[get_index(std::forward<_Component>(component))] !=
+           invalid_index_value<value_type>;
 }
 
 template<typename _Components>
-void marker<_Components>::reset() noexcept
+inline void index<_Components>::reset() noexcept
 {
-    bits_.reset();
+    index_.fill(invalid_index_value<value_type>);
 }
 
 template<typename _Components>
 template<typename _Component>
-constexpr auto marker<_Components>::get_index(_Component &&) const noexcept
+decltype(auto) index<_Components>::get_index(_Component &&) const noexcept
 {
-    constexpr auto list = componet_list_type{};
-    auto output = des::meta::get(list, [](auto & elem)
+    auto output = des::meta::get(componet_list_type{}, [](auto & elem)
     {
         return std::is_same<std::decay_t<decltype(elem)>,
                             std::decay_t<_Component>>{};
     });
     return std::get<0>(output);
-}
-
-template<typename _Marker, typename... _Components>
-inline void fill_marker(_Marker && marker, _Components && ... components)
-{
-    auto list = std::make_tuple(std::forward<_Components>(components)...);
-    meta::foreach(list, [&marker](const auto & elem)
-    {
-        marker.set(elem);
-    });
 }
 
 DES_COMPONENT_DETAILS_END

@@ -21,25 +21,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
-#define __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
+#ifndef __DES_COMPONENT_DETAILS_INDEX_H_INCLUDED__
+#define __DES_COMPONENT_DETAILS_INDEX_H_INCLUDED__
 
-#include <bitset>
+#include <array>
 #include <tuple>
 #include <utility>
+#include <limits>
 
 DES_COMPONENT_DETAILS_BEGIN
 
+template<typename _Integral>
+constexpr auto invalid_index_value = std::numeric_limits<_Integral>::max();
+
 template<typename _Components>
-struct marker
+struct index
 {
     using componet_list_type = _Components;
-    using bits_type = std::bitset<std::tuple_size<componet_list_type>::value>;
+    using value_type = size_t;
+    using index_type = std::array<value_type, std::tuple_size<componet_list_type>::value>;
 
-    constexpr auto size() const noexcept;
+    index() { reset(); }
+    void reset() noexcept;
 
     template<typename _Component>
-    void set(_Component && component) noexcept;
+    void set(_Component && component, value_type value) noexcept;
+
+    template<typename _Component>
+    decltype(auto) get(_Component && component) const noexcept;
 
     template<typename _Component>
     void reset(_Component && component) noexcept;
@@ -47,28 +56,32 @@ struct marker
     template<typename _Component>
     auto test(_Component && component) const noexcept;
 
-    void reset() noexcept;
-
 private:
 
     template<typename _Component>
-    constexpr auto get_index(_Component && component) const noexcept;
+    decltype(auto) get_index(_Component && component) const noexcept;
 
 private:
 
-    bits_type bits_;
+    index_type index_;
 };
 
 template<typename... _Components>
-inline constexpr auto make_marker(_Components && ... components)
+struct index_maker
 {
-    auto list = std::make_tuple(std::forward<_Components>(components)...);
-    return marker<std::decay_t<decltype(list)>>{};
-}
+    auto make() const noexcept
+    {
+        using list_type = std::tuple<_Components...>;
+        return index<list_type>{};
+    }
+};
 
-template<typename _Marker, typename... _Components>
-inline void fill_marker(_Marker && marker, _Components && ... components);
+template<typename... _Components>
+inline constexpr auto make_index(_Components && ...)
+{
+    return index_maker<std::decay_t<_Components>...>{};
+}
 
 DES_COMPONENT_DETAILS_END
 
-#endif // __DES_COMPONENT_DETAILS_MARKER_H_INCLUDED__
+#endif // __DES_COMPONENT_DETAILS_INDEX_H_INCLUDED__

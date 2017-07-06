@@ -89,11 +89,11 @@ private:
     std::vector<_Data> data_ = std::vector<_Data>(_Capacity::value);
 };
 
-template<typename _Marker>
+template<typename _Index>
 struct data_maker
 {
     template<typename _Config>
-    constexpr auto make(const _Config & cfg) const noexcept;
+    auto make(const _Config & cfg) const noexcept;
 };
 
 template<typename _Maker>

@@ -3,7 +3,7 @@
 #include <des/component/component.h>
 #include <des/component/buffer.h>
 #include <des/component/storage.h>
-#include <des/component/marker.h>
+#include <des/component/index.h>
 #include <des/entity/entity.h>
 #include <des/entity/buffer.h>
 #include <des/entity/storage.h>
@@ -19,7 +19,7 @@ constexpr auto component1 = des::component::component<data1>;
 constexpr auto component2 = des::component::component<data2>;
 constexpr auto component3 = des::component::component<data3>;
 
-constexpr auto marker = des::component::make_marker(component1, component2, component3);
+constexpr auto index = des::component::make_index(component1, component2, component3);
 
 constexpr auto make_component_storage()
 {
@@ -31,7 +31,7 @@ constexpr auto make_component_storage()
 
 constexpr auto make_entity_storage()
 {
-    constexpr auto buffer = des::entity::make_buffer(marker);
+    constexpr auto buffer = des::entity::make_buffer(index);
     return des::entity::make_storage(buffer);
 }
 
