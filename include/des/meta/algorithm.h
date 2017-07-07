@@ -65,6 +65,15 @@ inline constexpr auto get(const _Tuple & tuple, _Predicate pred) noexcept
     });
 }
 
+template<typename _Tuple>
+inline constexpr auto cat(const _Tuple & tuple) noexcept
+{
+    return details::apply_index<std::tuple_size<_Tuple>{}>([&](auto... Is)
+    {
+        return std::tuple_cat(std::get<Is>(tuple)...);
+    });
+}
+
 template<typename _Tuple, typename _Predicate>
 inline constexpr auto copy(const _Tuple & tuple, _Predicate pred) noexcept
 {
