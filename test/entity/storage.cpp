@@ -1,7 +1,8 @@
 #include <cassert>
 
 #include <des/component/component.h>
-#include <des/component/index.h>
+#include <des/component/buffer.h>
+#include <des/component/storage.h>
 #include <des/data/config.h>
 #include <des/entity/entity.h>
 #include <des/entity/buffer.h>
@@ -15,7 +16,15 @@ constexpr auto component1 = des::component::component<data1>;
 constexpr auto component2 = des::component::component<data2>;
 constexpr auto component3 = des::component::component<data3>;
 
-constexpr auto index = des::component::make_index(component1, component2, component3);
+namespace components
+{
+    constexpr auto buffer1 = des::component::make_buffer(component1);
+    constexpr auto buffer2 = des::component::make_buffer(component2);
+    constexpr auto buffer3 = des::component::make_buffer(component3);
+    constexpr auto storage = des::component::make_storage(buffer1, buffer2, buffer3);
+}
+
+constexpr auto index = components::storage.index();
 constexpr auto buffer = des::entity::make_buffer(index);
 constexpr auto storage = des::entity::make_storage(buffer);
 

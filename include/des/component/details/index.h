@@ -66,21 +66,14 @@ private:
     index_type index_;
 };
 
-template<typename... _Components>
+template<typename _Components>
 struct index_maker
 {
     auto make() const noexcept
     {
-        using list_type = std::tuple<_Components...>;
-        return index<list_type>{};
+        return index<_Components>{};
     }
 };
-
-template<typename... _Components>
-inline constexpr auto make_index(_Components && ...)
-{
-    return index_maker<std::decay_t<_Components>...>{};
-}
 
 DES_COMPONENT_DETAILS_END
 

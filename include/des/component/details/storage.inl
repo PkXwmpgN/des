@@ -28,6 +28,9 @@ IN THE SOFTWARE.
 #include "des/meta/traits.h"
 #include "des/meta/algorithm.h"
 
+#include "index.h"
+#include "index.inl"
+
 DES_COMPONENT_DETAILS_BEGIN
 
 namespace /* anonymous */
@@ -78,22 +81,41 @@ inline decltype(auto) storage<_Data>::
 
 template<typename... _Buffers>
 template<typename _Config>
-inline auto storage_data_maker<_Buffers...>::make(const _Config & config) const noexcept
+inline auto storage_data_maker<_Buffers...>::make_data(const _Config & config) const noexcept
 {
     auto list = std::make_tuple(_Buffers{}...);
     return meta::transform(list, [&config](auto & buffer)
     {
-        return buffer.make(config);
+        return buffer.make_buffer(config);
     });
+}
+
+template<typename... _Buffers>
+inline auto storage_data_maker<_Buffers...>::make_component_list() const noexcept
+{
+    auto list = std::make_tuple(_Buffers{}...);
+    auto components = meta::transform(list, [](auto & buffer)
+    {
+        return buffer.make_component_list();
+    });
+    return meta::cat(components);
 }
 
 template<typename _Maker>
 template<typename _Config>
-inline auto storage_maker<_Maker>::make(const _Config & config) const noexcept
+inline constexpr auto storage_maker<_Maker>::make(const _Config & config) const noexcept
 {
-    using data_type = decltype(std::declval<_Maker>().make(config));
+    using data_type = decltype(std::declval<_Maker>().make_data(config));
     return storage<data_type>{};
 }
+
+template<typename _Maker>
+inline constexpr auto storage_maker<_Maker>::index() const noexcept
+{
+    using component_list_type = decltype(std::declval<_Maker>().make_component_list());
+    return index_maker<component_list_type>{};
+}
+
 
 
 

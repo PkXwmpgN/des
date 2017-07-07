@@ -48,14 +48,16 @@ template<typename... _Buffers>
 struct storage_data_maker
 {
     template<typename _Config>
-    auto make(const _Config & config) const noexcept;
+    auto make_data(const _Config & config) const noexcept;
+    auto make_component_list() const noexcept;
 };
 
 template<typename _Maker>
 struct storage_maker
 {
     template<typename _Config>
-    auto make(const _Config & config) const noexcept;
+    constexpr auto make(const _Config & config) const noexcept;
+    constexpr auto index() const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

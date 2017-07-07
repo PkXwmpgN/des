@@ -94,15 +94,15 @@ private:
 template<typename... _Components>
 struct buffer_data_maker
 {
-    template<typename _Config>
-    constexpr auto make(const _Config & cfg) const noexcept;
+    constexpr auto make() const noexcept;
 };
 
 template<typename _Maker>
 struct buffer_maker
 {
     template<typename _Config>
-    auto make(const _Config & cfg) const noexcept;
+    auto make_buffer(const _Config & cfg) const noexcept;
+    auto make_component_list() const noexcept;
 };
 
 DES_COMPONENT_DETAILS_END

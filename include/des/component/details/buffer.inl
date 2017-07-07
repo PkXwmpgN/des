@@ -69,21 +69,26 @@ inline decltype(auto) buffer_base<_Self, _Components>::self() noexcept
 }
 
 template<typename... _Components>
-template<typename _Config>
-inline constexpr auto buffer_data_maker<_Components...>::make(const _Config &) const noexcept
+inline constexpr auto buffer_data_maker<_Components...>::make() const noexcept
 {
     return std::tuple<_Components...>{};
 }
 
 template<typename _Maker>
 template<typename _Config>
-inline auto buffer_maker<_Maker>::make(const _Config & cfg) const noexcept
+inline auto buffer_maker<_Maker>::make_buffer(const _Config & cfg) const noexcept
 {
     using capacity_type = decltype(cfg.capacity());
-    using data_type = decltype(std::declval<_Maker>().make(cfg));
+    using data_type = decltype(std::declval<_Maker>().make());
     return meta::if_(cfg.fixed())
         .then_([](){ return buffer_fixed<data_type, capacity_type>{}; })
         .else_([](){ return buffer_dynamic<data_type, capacity_type>{}; })();
+}
+
+template<typename _Maker>
+inline auto buffer_maker<_Maker>::make_component_list() const noexcept
+{
+    return _Maker{}.make();
 }
 
 DES_COMPONENT_DETAILS_END
