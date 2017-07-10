@@ -28,48 +28,69 @@ IN THE SOFTWARE.
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Self, typename _Data>
-template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Data>::get(_Component &&,
-        _Id && ide) const noexcept
+template<typename _Data, typename _Capacity>
+template<typename _Component>
+inline decltype(auto) buffer_fixed<_Data, _Capacity>::get(_Component &&,
+        index_type value) const noexcept
 {
-    assert(ide.value() < self().data().size());
-
     using component_type = std::decay_t<_Component>;
-    return std::get<component_type>(self().data()[ide.value()]);
+    return std::get<component_type>(data_[value]);
 }
 
-template<typename _Self, typename _Data>
-template<typename _Component, typename _Id>
-inline decltype(auto) buffer_base<_Self, _Data>::get(_Component &&,
-        _Id && ide) noexcept
+template<typename _Data, typename _Capacity>
+template<typename _Component>
+inline decltype(auto) buffer_fixed<_Data, _Capacity>::get(_Component &&,
+        index_type value) noexcept
 {
-    assert(ide.value() < self().data().size());
-
     using component_type = std::decay_t<_Component>;
-    return std::get<component_type>(self().data()[ide.value()]);
+    return std::get<component_type>(data_[value]);
 }
 
-template<typename _Self, typename _Data>
-inline auto buffer_base<_Self, _Data>::size() const noexcept
+template<typename _Data, typename _Capacity>
+inline auto buffer_fixed<_Data, _Capacity>::size() const noexcept
 {
-    return self().data().size();
+    return data_.size();
 }
 
-template<typename _Self, typename _Data>
-inline decltype(auto) buffer_base<_Self, _Data>::self() const noexcept
+template<typename _Data, typename _Capacity>
+inline void buffer_fixed<_Data, _Capacity>::resize(index_type value)
 {
-    return static_cast<const self_type&>(*this);
+    assert(value <= size());
 }
 
-template<typename _Self, typename _Components>
-inline decltype(auto) buffer_base<_Self, _Components>::self() noexcept
+template<typename _Data, typename _Capacity>
+template<typename _Component>
+inline decltype(auto) buffer_dynamic<_Data, _Capacity>::get(_Component &&,
+        index_type value) const noexcept
 {
-    return static_cast<self_type&>(*this);
+    using component_type = std::decay_t<_Component>;
+    return std::get<component_type>(data_[value]);
+}
+
+template<typename _Data, typename _Capacity>
+template<typename _Component>
+inline decltype(auto) buffer_dynamic<_Data, _Capacity>::get(_Component &&,
+        index_type value) noexcept
+{
+    using component_type = std::decay_t<_Component>;
+    return std::get<component_type>(data_[value]);
+}
+
+template<typename _Data, typename _Capacity>
+inline auto buffer_dynamic<_Data, _Capacity>::size() const noexcept
+{
+    return data_.size();
+}
+
+template<typename _Data, typename _Capacity>
+inline void buffer_dynamic<_Data, _Capacity>::resize(index_type value)
+{
+    if(size() <= value)
+        data_.resize(data_.size() + value * 1.6);
 }
 
 template<typename... _Components>
-inline constexpr auto buffer_data_maker<_Components...>::make() const noexcept
+inline auto buffer_data_maker<_Components...>::make() const noexcept
 {
     return std::tuple<_Components...>{};
 }

@@ -28,20 +28,31 @@ IN THE SOFTWARE.
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Data>
+template<typename _Data, typename _Index>
 struct storage
 {
 public:
 
-    template<typename _Component, typename _Id>
-    decltype(auto) get(_Component && comp, _Id && id) noexcept;
+    using index_type = typename _Index::value_type;
 
-    template<typename _Component, typename _Id>
-    decltype(auto) get(_Component && comp, _Id && id) const noexcept;
+    storage();
+
+    template<typename _Component>
+    decltype(auto) get(_Component && comp, index_type value) noexcept;
+
+    template<typename _Component>
+    decltype(auto) get(_Component && comp, index_type value) const noexcept;
+
+    template<typename _Component>
+    auto add(_Component && comp);
+
+    template<typename _Component>
+    auto size(_Component && comp) const noexcept;
 
 private:
 
     _Data data_;
+    _Index index_;
 };
 
 template<typename... _Buffers>

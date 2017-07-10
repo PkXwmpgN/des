@@ -29,72 +29,64 @@ IN THE SOFTWARE.
 
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Self, typename _Data>
-struct buffer_base
+template<typename _Data, typename _Capacity>
+struct buffer_fixed
 {
-public:
+    using value_type = _Data;
+    using data_type = std::array<value_type, _Capacity::value>;
+    using index_type = typename data_type::size_type;
 
-    using data_type = _Data;
-    using self_type = _Self;
+    buffer_fixed() = default;
+    buffer_fixed(buffer_fixed &&) = default;
+    buffer_fixed & operator=(buffer_fixed &&) = default;
+    buffer_fixed(const buffer_fixed &) = delete;
+    buffer_fixed & operator=(const buffer_fixed &) = delete;
 
-    buffer_base() = default;
-    buffer_base(buffer_base &&) = default;
-    buffer_base & operator=(buffer_base &&) = default;
-    buffer_base(const buffer_base &) = delete;
-    buffer_base & operator=(const buffer_base &) = delete;
+    template<typename _Component>
+    decltype(auto) get(_Component && component, index_type value) const noexcept;
 
-    template<typename _Component, typename _Id>
-    decltype(auto) get(_Component && component, _Id && ide) const noexcept;
-
-    template<typename _Component, typename _Id>
-    decltype(auto) get(_Component && component, _Id && ide) noexcept;
+    template<typename _Component>
+    decltype(auto) get(_Component && component, index_type value) noexcept;
 
     auto size() const noexcept;
+    void resize(index_type value);
 
 private:
 
-    decltype(auto) self() const noexcept;
-    decltype(auto) self() noexcept;
+    data_type data_;
 };
 
 template<typename _Data, typename _Capacity>
-struct buffer_fixed final :
-    buffer_base<buffer_fixed<_Data, _Capacity>, _Data>
+struct buffer_dynamic
 {
-    using base_type = buffer_base<buffer_fixed<_Data, _Capacity>, _Data>;
-    friend base_type;
+    using value_type = _Data;
+    using data_type = std::vector<value_type>;
+    using index_type = typename data_type::size_type;
+
+    buffer_dynamic() = default;
+    buffer_dynamic(buffer_dynamic &&) = default;
+    buffer_dynamic & operator=(buffer_dynamic &&) = default;
+    buffer_dynamic(const buffer_dynamic &) = delete;
+    buffer_dynamic & operator=(const buffer_dynamic &) = delete;
+
+    template<typename _Component>
+    decltype(auto) get(_Component && component, index_type value) const noexcept;
+
+    template<typename _Component>
+    decltype(auto) get(_Component && component, index_type value) noexcept;
+
+    auto size() const noexcept;
+    void resize(index_type value);
 
 private:
 
-    const auto & data() const noexcept { return data_; }
-    auto & data() noexcept { return data_; }
-
-private:
-
-    std::array<_Data, _Capacity::value> data_;
-};
-
-template<typename _Data, typename _Capacity>
-struct buffer_dynamic final :
-    buffer_base<buffer_dynamic<_Data, _Capacity>, _Data>
-{
-    using base_type = buffer_base<buffer_dynamic<_Data, _Capacity>, _Data>;
-    friend base_type;
-
-private:
-
-    const auto & data() const noexcept { return data_; }
-    auto & data() noexcept { return data_; }
-
-private:
-
-    std::vector<_Data> data_ = std::vector<_Data>(_Capacity::value);
+    data_type data_ = data_type(_Capacity::value);
 };
 
 template<typename... _Components>
 struct buffer_data_maker
 {
-    constexpr auto make() const noexcept;
+    auto make() const noexcept;
 };
 
 template<typename _Maker>

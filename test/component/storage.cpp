@@ -35,44 +35,46 @@ namespace test_aos
     constexpr auto storage = des::component::make_storage(buffer);
 }
 
-template<typename _Storage>
-void test(const _Storage & storage)
+namespace fixed
 {
-    {
-        constexpr auto config = des::data::make_config()
-            .fixed_entity(des::meta::size_v<2>);
+    constexpr auto config = des::data::make_config()
+        .fixed_entity(des::meta::size_v<2>);
+}
 
-        constexpr auto eid1 = des::entity::make_entity_id(0);
-        constexpr auto eid2 = des::entity::make_entity_id(1);
+namespace dynamic
+{
+    constexpr auto config = des::data::make_config()
+        .dynamic_entity(des::meta::size_v<2>);
+}
 
-        auto fixed_storage = storage.make(config);
+template<typename _Storage>
+void start_test(const _Storage & storage)
+{
+    test(storage.make(fixed::config));
+    test(storage.make(dynamic::config));
+}
 
-        fixed_storage.get(component1, eid1).x = 10;
-        fixed_storage.get(component2, eid2).y = 10;
+template<typename _Storage>
+void test(_Storage && storage)
+{
+    auto index1 = storage.add(component1);
+    auto index2 = storage.add(component1);
+    auto index3 = storage.add(component2);
 
-        assert(fixed_storage.get(component1, eid1).x == 10);
-        assert(fixed_storage.get(component2, eid2).y == 10);
-    }
+    assert(storage.size(component1) == 2);
+    assert(storage.size(component2) == 1);
 
-    {
-        constexpr auto config = des::data::make_config()
-            .dynamic_entity(des::meta::size_v<2>);
+    storage.get(component1, index1).x = 0;
+    storage.get(component1, index2).x = 1;
+    storage.get(component2, index3).y = 1;
 
-        constexpr auto eid1 = des::entity::make_entity_id(0);
-        constexpr auto eid2 = des::entity::make_entity_id(1);
-
-        auto dynamic_storage = storage.make(config);
-
-        dynamic_storage.get(component1, eid1).x = 10;
-        dynamic_storage.get(component2, eid2).y = 10;
-
-        assert(dynamic_storage.get(component1, eid1).x == 10);
-        assert(dynamic_storage.get(component2, eid2).y == 10);
-    }
+    assert(storage.get(component1, index1).x == 0);
+    assert(storage.get(component1, index2).x == 1);
+    assert(storage.get(component2, index3).y == 1);
 }
 
 int main()
 {
-    test(test_aos::storage);
-    test(test_soa::storage);
+    start_test(test_aos::storage);
+    start_test(test_soa::storage);
 }

@@ -37,7 +37,7 @@ namespace /* anonymous */
 {
     template<typename _Buffer, typename _Component>
     constexpr auto contains_v = meta::is_tuple_contains<std::decay_t<_Component>,
-                                        typename std::decay_t<_Buffer>::data_type>{};
+                                        typename std::decay_t<_Buffer>::value_type>{};
 
     template<typename _Component, typename _Data>
     inline decltype(auto) get_buffer(_Component && component, _Data && data) noexcept
@@ -47,36 +47,54 @@ namespace /* anonymous */
             return contains_v<decltype(buffer), decltype(component)>;
         });
 
-        using result_type = std::decay_t<decltype(result)>;
-        static_assert(std::tuple_size<result_type>::value == 1, "");
-
         auto index = std::get<0>(result);
         return std::get<index>(data);
     }
 }
 
-template<typename _Data>
-template<typename _Component, typename _Id>
-inline decltype(auto) storage<_Data>::
-    get(_Component && comp, _Id && id) const noexcept
+template<typename _Data, typename _Index>
+inline storage<_Data, _Index>::storage()
 {
-    const auto & buffer = get_buffer(std::forward<_Component>(comp), data_);
-    assert(id.value() < buffer.size());
-
-    return buffer.get(std::forward<_Component>(comp),
-                      std::forward<_Id>(id));
+    index_.fill(0);
 }
 
-template<typename _Data>
-template<typename _Component, typename _Id>
-inline decltype(auto) storage<_Data>::
-    get(_Component && comp, _Id && id) noexcept
+template<typename _Data, typename _Index>
+template<typename _Component>
+inline decltype(auto) storage<_Data, _Index>::
+    get(_Component && comp, index_type value) const noexcept
 {
-    auto & buffer = get_buffer(std::forward<_Component>(comp), data_);
-    assert(id.value() < buffer.size());
+    const auto & buffer = get_buffer(comp, data_);
+    assert(value < size(comp));
 
-    return buffer.get(std::forward<_Component>(comp),
-                      std::forward<_Id>(id));
+    return buffer.get(comp, value);
+}
+
+template<typename _Data, typename _Index>
+template<typename _Component>
+inline decltype(auto) storage<_Data, _Index>::
+    get(_Component && comp, index_type value) noexcept
+{
+    auto & buffer = get_buffer(comp, data_);
+    assert(value < size(comp));
+
+    return buffer.get(comp, value);
+}
+
+template<typename _Data, typename _Index>
+template<typename _Component>
+inline auto storage<_Data, _Index>::add(_Component && comp)
+{
+    auto & buffer = get_buffer(comp, data_);
+    auto current_index = index_.get(comp);
+    buffer.resize(index_.increase(comp));
+    return current_index;
+}
+
+template<typename _Data, typename _Index>
+template<typename _Component>
+inline auto storage<_Data, _Index>::size(_Component && comp) const noexcept
+{
+    return index_.get(std::forward<_Component>(comp));
 }
 
 template<typename... _Buffers>
@@ -106,7 +124,10 @@ template<typename _Config>
 inline constexpr auto storage_maker<_Maker>::make(const _Config & config) const noexcept
 {
     using data_type = decltype(std::declval<_Maker>().make_data(config));
-    return storage<data_type>{};
+    using component_list_type = decltype(std::declval<_Maker>().make_component_list());
+    using index_maker_type = index_maker<component_list_type>;
+    using index_type = decltype(std::declval<index_maker_type>().make());
+    return storage<data_type, index_type>{};
 }
 
 template<typename _Maker>
@@ -115,8 +136,5 @@ inline constexpr auto storage_maker<_Maker>::index() const noexcept
     using component_list_type = decltype(std::declval<_Maker>().make_component_list());
     return index_maker<component_list_type>{};
 }
-
-
-
 
 DES_COMPONENT_DETAILS_END
