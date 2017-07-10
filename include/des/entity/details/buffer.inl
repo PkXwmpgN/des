@@ -25,42 +25,58 @@ IN THE SOFTWARE.
 #include <type_traits>
 
 #include "entity.h"
+#include "entity.inl"
 #include "des/meta/statement.h"
 
 DES_ENTITY_DETAILS_BEGIN
 
-template<typename _Self, typename _Data>
-template<typename _Id>
-inline decltype(auto) buffer_base<_Self, _Data>::get(_Id && ide) const noexcept
+template<typename _Data, typename _Capacity>
+inline decltype(auto) buffer_fixed<_Data, _Capacity>::get(index_type value) const noexcept
 {
-    assert(ide.value() < self().data().size());
-    return self().data()[ide.value()];
+    return data_[value];
 }
 
-template<typename _Self, typename _Data>
-template<typename _Id>
-inline decltype(auto) buffer_base<_Self, _Data>::get(_Id && ide) noexcept
+template<typename _Data, typename _Capacity>
+inline decltype(auto) buffer_fixed<_Data, _Capacity>::get(index_type value) noexcept
 {
-    assert(ide.value() < self().data().size());
-    return self().data()[ide.value()];
+    return data_[value];
 }
 
-template<typename _Self, typename _Data>
-inline auto buffer_base<_Self, _Data>::size() const noexcept
+template<typename _Data, typename _Capacity>
+inline auto buffer_fixed<_Data, _Capacity>::size() const noexcept
 {
-    return self().data().size();
+    return data_.size();
 }
 
-template<typename _Self, typename _Data>
-inline decltype(auto) buffer_base<_Self, _Data>::self() const noexcept
+template<typename _Data, typename _Capacity>
+inline void buffer_fixed<_Data, _Capacity>::resize(index_type value)
 {
-    return static_cast<const self_type&>(*this);
+    assert(value <= size());
 }
 
-template<typename _Self, typename _Data>
-inline decltype(auto) buffer_base<_Self, _Data>::self() noexcept
+template<typename _Data, typename _Capacity>
+inline decltype(auto) buffer_dynamic<_Data, _Capacity>::get(index_type value) const noexcept
 {
-    return static_cast<self_type&>(*this);
+    return data_[value];
+}
+
+template<typename _Data, typename _Capacity>
+inline decltype(auto) buffer_dynamic<_Data, _Capacity>::get(index_type value) noexcept
+{
+    return data_[value];
+}
+
+template<typename _Data, typename _Capacity>
+inline auto buffer_dynamic<_Data, _Capacity>::size() const noexcept
+{
+    return data_.size();
+}
+
+template<typename _Data, typename _Capacity>
+inline void buffer_dynamic<_Data, _Capacity>::resize(index_type value)
+{
+    if(size() <= value)
+        data_.resize(data_.size() + value * 1.6);
 }
 
 template<typename _Index>

@@ -25,6 +25,62 @@ IN THE SOFTWARE.
 
 DES_DATA_DETAILS_BEGIN
 
+template<typename _Components, typename _Entities>
+inline auto service<_Components, _Entities>::create_entity()
+{
+    return entities_.add();
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Id>
+inline auto service<_Components, _Entities>::destroy_entity(_Id && id)
+{
+    (void)id;
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Component, typename _Id>
+inline decltype(auto) service<_Components, _Entities>::
+    add_component(_Component && component, _Id && id)
+{
+    assert(test_entity(id));
+    return entities_.get(id).register_component(component, components_);
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Component, typename _Id>
+inline decltype(auto) service<_Components, _Entities>::
+    get_component(_Component && component, _Id && id) noexcept
+{
+    assert(test_entity(id));
+    return entities_.get(id).get_component(component, components_);
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Component, typename _Id>
+inline decltype(auto) service<_Components, _Entities>::
+    get_component(_Component && component, _Id && id) const noexcept
+{
+    assert(test_entity(id));
+    return entities_.get(id).get_component(component, components_);
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Component, typename _Id>
+inline auto service<_Components, _Entities>::
+    test_component(_Component && component, _Id && id) const noexcept
+{
+    assert(test_entity(id));
+    return entities_.get(id).test_component(component);
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Id>
+inline auto service<_Components, _Entities>::test_entity(_Id && id) const noexcept
+{
+    return id.value() < entities_.size();
+}
+
 template<typename _Storage>
 template<typename _Config>
 inline auto service_maker<_Storage>::make(const _Config & config) const noexcept

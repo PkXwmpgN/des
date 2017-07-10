@@ -34,6 +34,31 @@ public:
     using component_storage_type = _Components;
     using entity_storage_type = _Entities;
 
+    auto create_entity();
+
+    template<typename _Id>
+    auto destroy_entity(_Id && id);
+
+    template<typename _Component, typename _Id>
+    decltype(auto) add_component(_Component && component, _Id && id);
+
+    template<typename _Component, typename _Id>
+    decltype(auto) get_component(_Component && component, _Id && id) noexcept;
+
+    template<typename _Component, typename _Id>
+    decltype(auto) get_component(_Component && component, _Id && id) const noexcept;
+
+    template<typename _Component, typename _Id>
+    void remove_component(_Component && component, _Id && id);
+
+    template<typename _Component, typename _Id>
+    auto test_component(_Component && component, _Id && id) const noexcept;
+
+    template<typename _Id>
+    auto test_entity(_Id && id) const noexcept;
+
+    auto size() const noexcept;
+
 private:
 
     component_storage_type components_;

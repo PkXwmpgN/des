@@ -32,10 +32,10 @@ IN THE SOFTWARE.
 
 DES_ENTITY_BEGIN
 
-template<typename _Marker>
-inline constexpr auto make_buffer(_Marker &&) noexcept
+template<typename _Index>
+inline constexpr auto make_buffer(_Index &&) noexcept
 {
-    using data_maker_type = details::data_maker<std::decay_t<_Marker>>;
+    using data_maker_type = details::data_maker<std::decay_t<_Index>>;
     return details::buffer_maker<data_maker_type>{};
 }
 

@@ -27,22 +27,32 @@ IN THE SOFTWARE.
 #include <vector>
 #include <queue>
 
+#include "identificator.h"
+
 DES_ENTITY_DETAILS_BEGIN
+
+struct storage_identificator_tag{};
+constexpr auto storage_identificator = storage_identificator_tag{};
 
 template<typename _Data>
 struct storage
 {
 public:
 
-    template<typename _Id>
-    decltype(auto) get(_Id && ide) const noexcept;
+    using data_type = _Data;
+    using index_type = typename data_type::index_type;
+    using identificator_type = identificator<index_type, storage_identificator_tag>;
 
-    template<typename _Id>
-    decltype(auto) get(_Id && ide) noexcept;
+    decltype(auto) get(identificator_type ide) const noexcept;
+    decltype(auto) get(identificator_type ide) noexcept;
+
+    auto add();
+    auto size() const noexcept;
 
 private:
 
-    _Data data_;
+    data_type data_;
+    index_type active_ = 0;
 };
 
 template<typename _Buffer>

@@ -26,17 +26,29 @@ IN THE SOFTWARE.
 DES_ENTITY_DETAILS_BEGIN
 
 template<typename _Data>
-template<typename _Id>
-decltype(auto) storage<_Data>::get(_Id && ide) const noexcept
+decltype(auto) storage<_Data>::get(identificator_type ide) const noexcept
 {
-    return data_.get(ide);
+    return data_.get(ide.value());
 }
 
 template<typename _Data>
-template<typename _Id>
-decltype(auto) storage<_Data>::get(_Id && ide) noexcept
+decltype(auto) storage<_Data>::get(identificator_type ide) noexcept
 {
-    return data_.get(ide);
+    return data_.get(ide.value());
+}
+
+template<typename _Data>
+auto storage<_Data>::storage<_Data>::add()
+{
+    auto current_index = active_;
+    data_.resize(++active_);
+    return make_identificator(current_index, storage_identificator);
+}
+
+template<typename _Data>
+auto storage<_Data>::size() const noexcept
+{
+    return data_.size();
 }
 
 template<typename _Buffer>

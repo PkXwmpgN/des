@@ -73,6 +73,16 @@ inline constexpr bool is_valid(identificator<_Integral, _Tag> iid) noexcept
     return iid.value() == invalid_identificator_value<_Integral>;
 }
 
+template<typename _Integral, typename _Tag>
+inline constexpr auto make_identificator(_Integral && value, _Tag &&)
+{
+    return identificator
+    <
+        std::decay_t<_Integral>,
+        std::decay_t<_Tag>
+    >{value};
+}
+
 DES_ENTITY_DETAILS_END
 
 #endif // __DES_ENTITY_DETAILS_IDENTIFICATOR_H_INCLUDED__

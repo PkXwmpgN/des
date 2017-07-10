@@ -4,7 +4,6 @@
 #include <des/component/component.h>
 #include <des/component/buffer.h>
 #include <des/component/storage.h>
-#include <des/entity/entity.h>
 
 struct data1
 {

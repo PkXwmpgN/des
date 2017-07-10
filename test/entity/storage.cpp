@@ -4,7 +4,6 @@
 #include <des/component/buffer.h>
 #include <des/component/storage.h>
 #include <des/data/config.h>
-#include <des/entity/entity.h>
 #include <des/entity/buffer.h>
 #include <des/entity/storage.h>
 
@@ -24,9 +23,12 @@ namespace components
     constexpr auto storage = des::component::make_storage(buffer1, buffer2, buffer3);
 }
 
-constexpr auto index = components::storage.index();
-constexpr auto buffer = des::entity::make_buffer(index);
-constexpr auto storage = des::entity::make_storage(buffer);
+namespace entity
+{
+    constexpr auto index = components::storage.index();
+    constexpr auto buffer = des::entity::make_buffer(index);
+    constexpr auto storage = des::entity::make_storage(buffer);
+}
 
 namespace fixed
 {
@@ -43,19 +45,21 @@ namespace dynamic
 template<typename _Config>
 void test(const _Config & config)
 {
-    constexpr auto eid1 = des::entity::make_entity_id(0);
-    constexpr auto eid2 = des::entity::make_entity_id(1);
+    auto components = components::storage.make(config);
+    auto entities = entity::storage.make(config);
 
-    auto s = storage.make(config);
-    s.get(eid1).register_component(component1);
-    s.get(eid1).register_component(component3);
+    auto ide1 = entities.add();
+    auto ide2 = entities.add();
 
-    assert(s.get(eid1).test_component(component1));
-    assert(s.get(eid1).test_component(component3));
-    assert(!s.get(eid1).test_component(component2));
-    assert(!s.get(eid2).test_component(component1));
-    assert(!s.get(eid2).test_component(component3));
-    assert(!s.get(eid2).test_component(component2));
+    entities.get(ide1).register_component(component1, components);
+    entities.get(ide1).register_component(component3, components);
+
+    assert(entities.get(ide1).test_component(component1));
+    assert(entities.get(ide1).test_component(component3));
+    assert(!entities.get(ide1).test_component(component2));
+    assert(!entities.get(ide2).test_component(component1));
+    assert(!entities.get(ide2).test_component(component3));
+    assert(!entities.get(ide2).test_component(component2));
 }
 
 int main()

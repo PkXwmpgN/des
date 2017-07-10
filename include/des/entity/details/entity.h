@@ -31,30 +31,24 @@ DES_ENTITY_DETAILS_BEGIN
 template<typename _Index>
 struct entity
 {
-    template<typename _Component>
-    void register_component(_Component && component) noexcept
-    {
-        index_.set(std::forward<_Component>(component), 0);
-    }
+    using index_type = typename _Index::value_type;
+
+    template<typename _Component, typename _Storage>
+    decltype(auto) register_component(_Component && component, _Storage && storage);
+
+    template<typename _Component, typename _Storage>
+    void unregister_component(_Component && component, _Storage && storage) noexcept;
+
+    template<typename _Component, typename _Storage>
+    decltype(auto) get_component(_Component && component, _Storage && storage) const noexcept;
+
+    template<typename _Component, typename _Storage>
+    decltype(auto) get_component(_Component && component, _Storage && storage) noexcept;
 
     template<typename _Component>
-    void unregister_component(_Component && component) noexcept
-    {
-        index_.reset(std::forward<_Component>(component));
-    }
+    auto test_component(_Component && component) const noexcept;
 
-    template<typename _Component>
-    auto test_component(_Component && component) const noexcept
-    {
-        return index_.test(std::forward<_Component>(component));
-    }
-
-    void reset() noexcept
-    {
-        index_.reset();
-    }
-
-    const auto & index() const noexcept { return index_; }
+    void reset() noexcept;
 
 private:
 
