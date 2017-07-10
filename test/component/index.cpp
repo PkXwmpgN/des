@@ -34,6 +34,24 @@ int main()
     assert(index.get(component2) == 2);
     assert(index.get(component3) == 3);
 
+    assert(index.increase(component1) == 2);
+    assert(index.get(component1) == 2);
+
+    assert(index.increase(component2) == 3);
+    assert(index.get(component2) == 3);
+
+    assert(index.increase(component3) == 4);
+    assert(index.get(component3) == 4);
+
+    assert(index.decrease(component1) == 1);
+    assert(index.get(component1) == 1);
+
+    assert(index.decrease(component2) == 2);
+    assert(index.get(component2) == 2);
+
+    assert(index.decrease(component3) == 3);
+    assert(index.get(component3) == 3);
+
     index.reset(component1);
     assert(index.test(component1) == false);
 }

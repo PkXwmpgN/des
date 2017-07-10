@@ -43,9 +43,16 @@ struct index
 
     index() { reset(); }
     void reset() noexcept;
+    void fill(value_type value) noexcept;
 
     template<typename _Component>
     void set(_Component && component, value_type value) noexcept;
+
+    template<typename _Component>
+    decltype(auto) increase(_Component && component) noexcept;
+
+    template<typename _Component>
+    decltype(auto) decrease(_Component && component) noexcept;
 
     template<typename _Component>
     decltype(auto) get(_Component && component) const noexcept;

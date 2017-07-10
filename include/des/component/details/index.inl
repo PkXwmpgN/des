@@ -34,6 +34,20 @@ inline void index<_Components>::set(_Component && component, value_type value) n
 
 template<typename _Components>
 template<typename _Component>
+decltype(auto) index<_Components>::increase(_Component && component) noexcept
+{
+    return ++index_[get_index(std::forward<_Component>(component))];
+}
+
+template<typename _Components>
+template<typename _Component>
+decltype(auto) index<_Components>::decrease(_Component && component) noexcept
+{
+    return --index_[get_index(std::forward<_Component>(component))];
+}
+
+template<typename _Components>
+template<typename _Component>
 inline decltype(auto) index<_Components>::get(_Component && component) const noexcept
 {
     return index_[get_index(std::forward<_Component>(component))];
@@ -57,12 +71,18 @@ inline auto index<_Components>::test(_Component && component) const noexcept
 template<typename _Components>
 inline void index<_Components>::reset() noexcept
 {
-    index_.fill(invalid_index_value<value_type>);
+    fill(invalid_index_value<value_type>);
+}
+
+template<typename _Components>
+inline void index<_Components>::fill(value_type value) noexcept
+{
+    index_.fill(value);
 }
 
 template<typename _Components>
 template<typename _Component>
-decltype(auto) index<_Components>::get_index(_Component &&) const noexcept
+inline decltype(auto) index<_Components>::get_index(_Component &&) const noexcept
 {
     auto output = des::meta::get(componet_list_type{}, [](auto & elem)
     {
