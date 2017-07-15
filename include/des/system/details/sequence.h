@@ -21,32 +21,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef __DES_SYSTEM_NODE_H_INCLUDED__
-#define __DES_SYSTEM_NODE_H_INCLUDED__
+#ifndef __DES_SYSTEM_DETAILS_SEQUENCE_H_INCLUDED__
+#define __DES_SYSTEM_DETAILS_SEQUENCE_H_INCLUDED__
 
-#include <utility>
-#include <tuple>
-
-#include "names.h"
-#include "details/node.h"
-#include "details/node.inl"
-#include "details/sequence.h"
-#include "details/sequence.inl"
-
-DES_SYSTEM_BEGIN
-
-template<typename _System>
-inline constexpr auto make_node(_System && system) noexcept
-{
-    return details::make_node(std::forward<_System>(system));
-}
+DES_SYSTEM_DETAILS_BEGIN
 
 template<typename... _Nodes>
-inline constexpr auto make_sequence(_Nodes && ... nodes)
-{
-    return details::make_sequence(std::forward<_Nodes>(nodes)...);
-}
+constexpr auto make_sequence(_Nodes && ... nodes);
 
-DES_SYSTEM_END
+DES_SYSTEM_DETAILS_END
 
-#endif // __DES_SYSTEM_NODE_H_INCLUDED__
+#endif // __DES_SYSTEM_DETAILS_SEQUENCE_H_INCLUDED__

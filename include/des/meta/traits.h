@@ -38,7 +38,11 @@ template <template<typename...> class _Template, typename _Type>
 constexpr auto is_specialization_of_v = is_specialization_of<_Template, _Type>::value;
 
 template<typename _Type, typename _Tuple>
-using is_tuple_contains = typename details::tuple_contains_type<_Type, _Tuple>::type;
+using is_tuple_contains = typename details::tuple_contains_type
+<
+    std::decay_t<_Type>,
+    std::decay_t<_Tuple>
+>::type;
 
 template<typename _Type, typename _Tuple>
 constexpr auto is_tuple_contains_v = is_tuple_contains<_Type, _Tuple>::value;
