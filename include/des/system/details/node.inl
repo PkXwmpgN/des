@@ -97,9 +97,11 @@ inline constexpr auto node<_Data>::dependency_list() const noexcept
 template<typename _System>
 inline constexpr auto make_node(_System && system) noexcept
 {
-    using type = decltype(meta::options::set(meta::options::empty_v,
-        keys::system, system));
-    return node<type>{};
+    using type  = decltype(meta::options::set(meta::options::empty_v, keys::system, system));
+    using type1 = decltype(meta::options::set(type{}, keys::input, std::make_tuple()));
+    using type2 = decltype(meta::options::set(type1{}, keys::output, std::make_tuple()));
+    using type3 = decltype(meta::options::set(type2{}, keys::dependencies, std::make_tuple()));
+    return node<type3>{};
 }
 
 DES_SYSTEM_DETAILS_END
