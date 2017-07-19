@@ -31,6 +31,9 @@ IN THE SOFTWARE.
 #include "index.h"
 #include "index.inl"
 
+#include "meta.h"
+#include "meta.inl"
+
 DES_COMPONENT_DETAILS_BEGIN
 
 namespace /* anonymous */
@@ -60,33 +63,51 @@ namespace /* anonymous */
     }
 }
 
-template<typename _Data, typename _Index>
-inline storage<_Data, _Index>::storage()
+template<typename _Data, typename _Meta, typename _Index>
+inline storage<_Data, _Meta, _Index>::storage()
 {
     index_.fill(0);
 }
 
-template<typename _Data, typename _Index>
+template<typename _Data, typename _Meta, typename _Index>
 template<typename _Component>
-inline decltype(auto) storage<_Data, _Index>::
+inline decltype(auto) storage<_Data, _Meta, _Index>::
     get(_Component && comp, index_type value) const noexcept
 {
     assert(value < size(comp));
     return get_component(comp, value, data_);
 }
 
-template<typename _Data, typename _Index>
+template<typename _Data, typename _Meta, typename _Index>
 template<typename _Component>
-inline decltype(auto) storage<_Data, _Index>::
+inline decltype(auto) storage<_Data, _Meta, _Index>::
     get(_Component && comp, index_type value) noexcept
 {
     assert(value < size(comp));
     return get_component(comp, value, data_);
 }
 
-template<typename _Data, typename _Index>
+template<typename _Data, typename _Meta, typename _Index>
 template<typename _Component>
-inline auto storage<_Data, _Index>::add(_Component && comp)
+decltype(auto) storage<_Data, _Meta, _Index>::
+    meta(_Component && comp, index_type value) noexcept
+{
+    assert(value < size(comp));
+    return meta_[index_.id(comp)].get(value);
+}
+
+template<typename _Data, typename _Meta, typename _Index>
+template<typename _Component>
+decltype(auto) storage<_Data, _Meta, _Index>::
+    meta(_Component && comp, index_type value) const noexcept
+{
+    assert(value < size(comp));
+    return meta_[index_.id(comp)].get(value);
+}
+
+template<typename _Data, typename _Meta, typename _Index>
+template<typename _Component>
+inline auto storage<_Data, _Meta, _Index>::add(_Component && comp)
 {
     auto & buffer = get_buffer(comp, data_);
     auto current_index = index_.get(comp);
@@ -94,9 +115,9 @@ inline auto storage<_Data, _Index>::add(_Component && comp)
     return current_index;
 }
 
-template<typename _Data, typename _Index>
+template<typename _Data, typename _Meta, typename _Index>
 template<typename _Component>
-inline auto storage<_Data, _Index>::size(_Component && comp) const noexcept
+inline auto storage<_Data, _Meta, _Index>::size(_Component && comp) const noexcept
 {
     return index_.get(std::forward<_Component>(comp));
 }
@@ -129,9 +150,14 @@ inline constexpr auto storage_maker<_Maker>::make(const _Config & config) const 
 {
     using data_type = decltype(std::declval<_Maker>().make_data(config));
     using component_list_type = decltype(std::declval<_Maker>().make_component_list());
+
     using index_maker_type = index_maker<component_list_type>;
     using index_type = decltype(std::declval<index_maker_type>().make());
-    return storage<data_type, index_type>{};
+
+    using meta_maker_type = meta_maker<component_list_type>;
+    using meta_type = decltype(std::declval<meta_maker_type>().make_meta(config));
+
+    return storage<data_type, meta_type, index_type>{};
 }
 
 template<typename _Maker>

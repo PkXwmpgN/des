@@ -24,11 +24,9 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_STORAGE_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_STORAGE_H_INCLUDED__
 
-#include "des/meta/types.h"
-
 DES_COMPONENT_DETAILS_BEGIN
 
-template<typename _Data, typename _Index>
+template<typename _Data, typename _Meta, typename _Index>
 struct storage
 {
 public:
@@ -44,6 +42,12 @@ public:
     decltype(auto) get(_Component && comp, index_type value) const noexcept;
 
     template<typename _Component>
+    decltype(auto) meta(_Component && comp, index_type value) noexcept;
+
+    template<typename _Component>
+    decltype(auto) meta(_Component && comp, index_type value) const noexcept;
+
+    template<typename _Component>
     auto add(_Component && comp);
 
     template<typename _Component>
@@ -52,6 +56,8 @@ public:
 private:
 
     _Data data_;
+    _Meta meta_;
+
     _Index index_;
 };
 

@@ -70,6 +70,12 @@ void test(_Storage && storage)
     assert(storage.get(component1, index1).x == 0);
     assert(storage.get(component1, index2).x == 1);
     assert(storage.get(component2, index3).y == 1);
+
+    storage.meta(component1, index1).owner(1);
+    storage.meta(component1, index2).owner(2);
+    assert(storage.meta(component1, index1).owner() == 1);
+    assert(storage.meta(component1, index2).owner() == 2);
+    assert(storage.meta(component2, index3).owner() == 0);
 }
 
 int main()
