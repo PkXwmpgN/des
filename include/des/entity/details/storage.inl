@@ -55,7 +55,7 @@ template<typename _Buffer>
 template<typename _Config>
 auto storage_data_maker<_Buffer>::make(const _Config & config) const noexcept
 {
-    return _Buffer{}.make(config);
+    return _Buffer{}.make_buffer(config);
 }
 
 template<typename _Maker>

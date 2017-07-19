@@ -24,69 +24,14 @@ IN THE SOFTWARE.
 #ifndef __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 #define __DES_COMPONENT_DETAILS_BUFFER_H_INCLUDED__
 
-#include <array>
-#include <vector>
-
 DES_COMPONENT_DETAILS_BEGIN
-
-template<typename _Data, typename _Capacity>
-struct buffer_fixed
-{
-    using value_type = _Data;
-    using data_type = std::array<value_type, _Capacity::value>;
-    using index_type = typename data_type::size_type;
-
-    buffer_fixed() = default;
-    buffer_fixed(buffer_fixed &&) = default;
-    buffer_fixed & operator=(buffer_fixed &&) = default;
-    buffer_fixed(const buffer_fixed &) = delete;
-    buffer_fixed & operator=(const buffer_fixed &) = delete;
-
-    template<typename _Component>
-    decltype(auto) get(_Component && component, index_type value) const noexcept;
-
-    template<typename _Component>
-    decltype(auto) get(_Component && component, index_type value) noexcept;
-
-    auto size() const noexcept;
-    void resize(index_type value);
-
-private:
-
-    data_type data_;
-};
-
-template<typename _Data, typename _Capacity>
-struct buffer_dynamic
-{
-    using value_type = _Data;
-    using data_type = std::vector<value_type>;
-    using index_type = typename data_type::size_type;
-
-    buffer_dynamic() = default;
-    buffer_dynamic(buffer_dynamic &&) = default;
-    buffer_dynamic & operator=(buffer_dynamic &&) = default;
-    buffer_dynamic(const buffer_dynamic &) = delete;
-    buffer_dynamic & operator=(const buffer_dynamic &) = delete;
-
-    template<typename _Component>
-    decltype(auto) get(_Component && component, index_type value) const noexcept;
-
-    template<typename _Component>
-    decltype(auto) get(_Component && component, index_type value) noexcept;
-
-    auto size() const noexcept;
-    void resize(index_type value);
-
-private:
-
-    data_type data_ = data_type(_Capacity::value);
-};
 
 template<typename... _Components>
 struct buffer_data_maker
 {
-    auto make() const noexcept;
+    template<typename _Config>
+    auto make_data(const _Config & cfg) const noexcept;
+    auto make_component_list() const noexcept;
 };
 
 template<typename _Maker>

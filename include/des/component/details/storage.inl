@@ -50,6 +50,14 @@ namespace /* anonymous */
         auto index = std::get<0>(result);
         return std::get<index>(data);
     }
+
+    template<typename _Component, typename _Index, typename _Data>
+    inline decltype(auto) get_component(_Component && component,
+        _Index && index, _Data && data) noexcept
+    {
+        using component_type = std::decay_t<_Component>;
+        return std::get<component_type>(get_buffer(component, data).get(index));
+    }
 }
 
 template<typename _Data, typename _Index>
@@ -63,10 +71,8 @@ template<typename _Component>
 inline decltype(auto) storage<_Data, _Index>::
     get(_Component && comp, index_type value) const noexcept
 {
-    const auto & buffer = get_buffer(comp, data_);
     assert(value < size(comp));
-
-    return buffer.get(comp, value);
+    return get_component(comp, value, data_);
 }
 
 template<typename _Data, typename _Index>
@@ -74,10 +80,8 @@ template<typename _Component>
 inline decltype(auto) storage<_Data, _Index>::
     get(_Component && comp, index_type value) noexcept
 {
-    auto & buffer = get_buffer(comp, data_);
     assert(value < size(comp));
-
-    return buffer.get(comp, value);
+    return get_component(comp, value, data_);
 }
 
 template<typename _Data, typename _Index>

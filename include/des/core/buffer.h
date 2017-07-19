@@ -21,25 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "entity.h"
-#include "entity.inl"
-#include "des/core/buffer.h"
+#ifndef __DES_CORE_BUFFER_H_INCLUDED__
+#define __DES_CORE_BUFFER_H_INCLUDED__
 
-DES_ENTITY_DETAILS_BEGIN
+#include "names.h"
+#include "details/buffer.h"
+#include "details/buffer.inl"
 
-template<typename _Index>
-template<typename _Config>
-auto data_maker<_Index>::make_data(const _Config &) const noexcept
-{
-    using index_type = decltype(std::declval<_Index>().make());
-    return entity<index_type>{};
-}
-
-template<typename _Maker>
-template<typename _Config>
-inline auto buffer_maker<_Maker>::make_buffer(const _Config & cfg) const noexcept
-{
-    return core::details::buffer_maker<_Maker>().make(cfg);
-}
-
-DES_ENTITY_DETAILS_END
+#endif // __DES_CORE_BUFFER_H_INCLUDED__

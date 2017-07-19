@@ -24,71 +24,20 @@ IN THE SOFTWARE.
 #ifndef __DES_ENTITY_DETAILS_BUFFER_H_INCLUDED__
 #define __DES_ENTITY_DETAILS_BUFFER_H_INCLUDED__
 
-#include <array>
-#include <vector>
-
 DES_ENTITY_DETAILS_BEGIN
-
-template<typename _Data, typename _Capacity>
-struct buffer_fixed
-{
-    using value_type = _Data;
-    using index_type = typename value_type::index_type;
-    using data_type = std::array<value_type, _Capacity::value>;
-
-    buffer_fixed() = default;
-    buffer_fixed(buffer_fixed &&) = default;
-    buffer_fixed & operator=(buffer_fixed &&) = default;
-    buffer_fixed(const buffer_fixed &) = delete;
-    buffer_fixed & operator=(const buffer_fixed &) = delete;
-
-    decltype(auto) get(index_type value) const noexcept;
-    decltype(auto) get(index_type value) noexcept;
-
-    auto size() const noexcept;
-    void resize(index_type value);
-
-private:
-
-    data_type data_;
-};
-
-template<typename _Data, typename _Capacity>
-struct buffer_dynamic
-{
-    using value_type = _Data;
-    using index_type = typename value_type::index_type;
-    using data_type = std::vector<_Data>;
-
-    buffer_dynamic() = default;
-    buffer_dynamic(buffer_dynamic &&) = default;
-    buffer_dynamic & operator=(buffer_dynamic &&) = default;
-    buffer_dynamic(const buffer_dynamic &) = delete;
-    buffer_dynamic & operator=(const buffer_dynamic &) = delete;
-
-    decltype(auto) get(index_type) const noexcept;
-    decltype(auto) get(index_type) noexcept;
-
-    auto size() const noexcept;
-    void resize(index_type value);
-
-private:
-
-    data_type data_ = data_type(_Capacity::value);
-};
 
 template<typename _Index>
 struct data_maker
 {
     template<typename _Config>
-    auto make(const _Config & cfg) const noexcept;
+    auto make_data(const _Config & cfg) const noexcept;
 };
 
 template<typename _Maker>
 struct buffer_maker
 {
     template<typename _Config>
-    auto make(const _Config & cfg) const noexcept;
+    auto make_buffer(const _Config & cfg) const noexcept;
 };
 
 DES_ENTITY_DETAILS_END
