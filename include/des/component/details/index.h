@@ -63,10 +63,8 @@ struct index
     template<typename _Component>
     auto test(_Component && component) const noexcept;
 
-private:
-
     template<typename _Component>
-    decltype(auto) get_index(_Component && component) const noexcept;
+    auto id(_Component && component) const noexcept;
 
 private:
 
