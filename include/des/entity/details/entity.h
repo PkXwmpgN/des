@@ -34,16 +34,25 @@ struct entity
     using index_type = typename _Index::value_type;
 
     template<typename _Component, typename _Storage>
-    decltype(auto) register_component(_Component && component, _Storage && storage);
-
-    template<typename _Component, typename _Storage>
-    void unregister_component(_Component && component, _Storage && storage) noexcept;
-
-    template<typename _Component, typename _Storage>
     decltype(auto) get_component(_Component && component, _Storage && storage) const noexcept;
 
     template<typename _Component, typename _Storage>
     decltype(auto) get_component(_Component && component, _Storage && storage) noexcept;
+
+    template<typename _Component, typename _Storage>
+    decltype(auto) get_component_meta(_Component && component, _Storage && storage) const noexcept;
+
+    template<typename _Component, typename _Storage>
+    decltype(auto) get_component_meta(_Component && component, _Storage && storage) noexcept;
+
+    template<typename _Component>
+    decltype(auto) get_component_index(_Component && component) const noexcept;
+
+    template<typename _Component>
+    decltype(auto) get_component_index(_Component && component) noexcept;
+
+    template<typename _Component>
+    void reset_component_index(_Component && component) noexcept;
 
     template<typename _Component>
     auto test_component(_Component && component) const noexcept;

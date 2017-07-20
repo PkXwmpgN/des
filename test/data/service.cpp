@@ -87,10 +87,16 @@ void test(const _Config & config)
     decltype(auto) ref_comp1 = data.add_component(component1, ide2);
     decltype(auto) ref_comp2 = data.add_component(component1, ide2);
     assert(&ref_comp1 == &ref_comp2);
+    ref_comp1.x = 5;
 
     assert(data.test_component(component1, ide2));
     assert(!data.test_component(component2, ide2));
     assert(!data.test_component(component3, ide2));
+
+    data.remove_component(component1, ide1);
+    assert(data.test_component(component1, ide1) == false);
+    assert(data.test_component(component1, ide2) == true);
+    assert(data.get_component(component1, ide2).x == 5);
 }
 
 int main()

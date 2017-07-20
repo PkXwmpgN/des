@@ -28,24 +28,41 @@ DES_ENTITY_DETAILS_BEGIN
 template<typename _Index>
 template<typename _Component, typename _Storage>
 inline decltype(auto) entity<_Index>::
-    register_component(_Component && component, _Storage && storage)
+    get_component_meta(_Component && component, _Storage && storage) const noexcept
 {
-    if(test_component(component))
-        return get_component(std::forward<_Component>(component),
-                             std::forward<_Storage>(storage));
-
-    auto component_index = storage.add(component);
-    index_.set(component, component_index);
-    return storage.get(component, component_index);
+    return storage.meta(component, index_.get(component));
 }
 
 template<typename _Index>
 template<typename _Component, typename _Storage>
-inline void entity<_Index>::
-    unregister_component(_Component && component, _Storage && storage) noexcept
+inline decltype(auto) entity<_Index>::
+    get_component_meta(_Component && component, _Storage && storage) noexcept
 {
-    (void)component;
-    (void)storage;
+    return storage.meta(component, index_.get(component));
+}
+
+template<typename _Index>
+template<typename _Component>
+inline decltype(auto) entity<_Index>::
+    get_component_index(_Component && component) const noexcept
+{
+    return index_.get(component);
+}
+
+template<typename _Index>
+template<typename _Component>
+inline decltype(auto) entity<_Index>::
+    get_component_index(_Component && component) noexcept
+{
+    return index_.get(component);
+}
+
+template<typename _Index>
+template<typename _Component>
+inline void entity<_Index>::
+    reset_component_index(_Component && component) noexcept
+{
+    index_.reset(component);
 }
 
 template<typename _Index>

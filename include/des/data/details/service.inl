@@ -44,7 +44,14 @@ inline decltype(auto) service<_Components, _Entities>::
     add_component(_Component && component, _Id && id)
 {
     assert(test_entity(id));
-    return entities_.get(id).register_component(component, components_);
+
+    decltype(auto) entity = entities_.get(id);
+    if(entity.test_component(component))
+        return entity.get_component(component, components_);
+
+    entity.get_component_index(component) = components_.add(component);
+    entity.get_component_meta(component, components_).owner(id.value());
+    return entity.get_component(component, components_);
 }
 
 template<typename _Components, typename _Entities>
@@ -63,6 +70,24 @@ inline decltype(auto) service<_Components, _Entities>::
 {
     assert(test_entity(id));
     return entities_.get(id).get_component(component, components_);
+}
+
+template<typename _Components, typename _Entities>
+template<typename _Component, typename _Id>
+inline void service<_Components, _Entities>::
+    remove_component(_Component && component, _Id && id)
+{
+    assert(test_entity(id));
+
+    decltype(auto) entity = entities_.get(id);
+    auto index = entity.get_component_index(component);
+    entity.reset_component_index(component);
+    if(components_.remove(component, index))
+    {
+        auto owner = components_.meta(component, index).owner();
+        auto identificator = typename _Entities::identificator_type{owner};
+        entities_.get(identificator).get_component_index(component) = index;
+    }
 }
 
 template<typename _Components, typename _Entities>

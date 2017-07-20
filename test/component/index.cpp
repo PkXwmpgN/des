@@ -26,9 +26,9 @@ int main()
     assert(index.test(component2) == false);
     assert(index.test(component3) == false);
 
-    index.set(component1, 1);
-    index.set(component2, 2);
-    index.set(component3, 3);
+    index.get(component1) = 1;
+    index.get(component2) = 2;
+    index.get(component3) = 3;
 
     assert(index.get(component1) == 1);
     assert(index.get(component2) == 2);

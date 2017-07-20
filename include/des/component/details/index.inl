@@ -27,13 +27,6 @@ DES_COMPONENT_DETAILS_BEGIN
 
 template<typename _Components>
 template<typename _Component>
-inline void index<_Components>::set(_Component && component, value_type value) noexcept
-{
-    index_[id(std::forward<_Component>(component))] = value;
-}
-
-template<typename _Components>
-template<typename _Component>
 decltype(auto) index<_Components>::increase(_Component && component) noexcept
 {
     return ++index_[id(std::forward<_Component>(component))];
@@ -55,9 +48,16 @@ inline decltype(auto) index<_Components>::get(_Component && component) const noe
 
 template<typename _Components>
 template<typename _Component>
+inline decltype(auto) index<_Components>::get(_Component && component) noexcept
+{
+    return index_[id(std::forward<_Component>(component))];
+}
+
+template<typename _Components>
+template<typename _Component>
 inline void index<_Components>::reset(_Component && component) noexcept
 {
-    set(std::forward<_Component>(component), invalid_index_value<value_type>);
+    get(std::forward<_Component>(component)) = invalid_index_value<value_type>;
 }
 
 template<typename _Components>
