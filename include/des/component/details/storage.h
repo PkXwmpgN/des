@@ -51,6 +51,9 @@ public:
     auto add(_Component && comp);
 
     template<typename _Component>
+    auto remove(_Component && comp, index_type value);
+
+    template<typename _Component>
     auto size(_Component && comp) const noexcept;
 
 private:

@@ -76,6 +76,13 @@ void test(_Storage && storage)
     assert(storage.meta(component1, index1).owner() == 1);
     assert(storage.meta(component1, index2).owner() == 2);
     assert(storage.meta(component2, index3).owner() == 0);
+
+    assert(storage.remove(component1, index1));
+    assert(storage.size(component1) == 1);
+    assert(storage.get(component1, index1).x == 1);
+
+    assert(!storage.remove(component1, index1));
+    assert(!storage.size(component1));
 }
 
 int main()

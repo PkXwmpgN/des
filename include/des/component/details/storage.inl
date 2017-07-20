@@ -110,9 +110,28 @@ template<typename _Component>
 inline auto storage<_Data, _Meta, _Index>::add(_Component && comp)
 {
     auto & buffer = get_buffer(comp, data_);
+    auto & meta = meta_[index_.id(comp)];
     auto current_index = index_.get(comp);
-    buffer.resize(index_.increase(comp));
+    auto next_index = index_.increase(comp);
+    buffer.resize(next_index);
+    meta.resize(next_index);
     return current_index;
+}
+
+template<typename _Data, typename _Meta, typename _Index>
+template<typename _Component>
+inline auto storage<_Data, _Meta, _Index>::remove(_Component && comp, index_type value)
+{
+    assert(value < size(comp));
+    if(auto index = index_.decrease(comp))
+    {
+        auto & buffer = get_buffer(comp, data_);
+        auto & meta = meta_[index_.id(comp)];
+        std::swap(buffer.get(value), buffer.get(index));
+        std::swap(meta.get(value), meta.get(index));
+        return true;
+    }
+    return false;
 }
 
 template<typename _Data, typename _Meta, typename _Index>
