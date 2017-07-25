@@ -22,6 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "des/meta/algorithm.h"
+#include "des/meta/types.h"
 
 DES_COMPONENT_DETAILS_BEGIN
 
@@ -82,14 +83,11 @@ inline void index<_Components>::fill(value_type value) noexcept
 
 template<typename _Components>
 template<typename _Component>
-inline auto index<_Components>::id(_Component &&) const noexcept
+inline auto index<_Components>::id(_Component && component) const noexcept
 {
-    auto output = des::meta::get(componet_list_type{}, [](auto & elem)
-    {
-        return std::is_same<std::decay_t<decltype(elem)>,
-                            std::decay_t<_Component>>{};
-    });
-    return std::get<0>(output);
+    using index = decltype(meta::index(componet_list_type{},
+                           std::forward<_Component>(component)));
+    return index::value;
 }
 
 DES_COMPONENT_DETAILS_END

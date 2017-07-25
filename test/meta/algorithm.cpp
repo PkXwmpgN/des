@@ -59,4 +59,15 @@ int main()
         static_assert(std::tuple_size<output_type>::value == 1, "");
         static_assert(std::is_same<std::tuple_element_t<0, output_type>, C>::value, "");
     }
+
+    // index
+    {
+        constexpr auto input = std::make_tuple(A{}, 1, C{});
+        static_assert(std::is_same<decltype(des::meta::index(input, A{})),
+                                   des::meta::sz_t<0>>::value, "");
+        static_assert(std::is_same<decltype(des::meta::index(input, 1)),
+                                   des::meta::sz_t<1>>::value, "");
+        static_assert(std::is_same<decltype(des::meta::index(input, C{})),
+                                   des::meta::sz_t<2>>::value, "");
+    }
 }

@@ -28,6 +28,7 @@ IN THE SOFTWARE.
 
 #include "names.h"
 #include "statement.h"
+#include "types.h"
 #include "details/tuple_apply.h"
 
 DES_META_BEGIN
@@ -98,6 +99,17 @@ inline constexpr auto copy(const _Tuple & tuple, _Predicate pred) noexcept
                 .else_([](){ return std::make_tuple(); })();
         }(std::get<Is>(tuple), pred)...);
     });
+}
+
+template<typename _Tuple, typename _Type>
+inline constexpr auto index(_Tuple && tuple, _Type &&) noexcept
+{
+    auto list = get(std::forward<_Tuple>(tuple), [](auto & elem)
+    {
+        return std::is_same<std::decay_t<decltype(elem)>,
+                            std::decay_t<_Type>>{};
+    });
+    return sz_v<std::get<0>(list)>;
 }
 
 DES_META_END
