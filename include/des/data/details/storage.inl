@@ -69,7 +69,7 @@ inline constexpr auto storage<_Data>::entities() const noexcept
 
 inline constexpr auto make_storage() noexcept
 {
-    return storage<des::meta::options::empty>{};
+    return storage<des::meta::options::empty_t>{};
 }
 
 DES_DATA_DETAILS_END

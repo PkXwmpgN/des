@@ -34,10 +34,10 @@ IN THE SOFTWARE.
 DES_META_OPTIONS_BEGIN
 
 template<std::size_t _Size>
-constexpr auto key_v = size<_Size>{};
+constexpr auto key_v = sz_v<_Size>;
 
-using empty = std::tuple<>;
-constexpr auto empty_v = empty{};
+using empty_t = std::tuple<>;
+constexpr auto empty_v = empty_t{};
 
 template<typename _Data, typename _Key, typename _Value>
 inline auto set(_Data && data, _Key && key, _Value && value)
@@ -47,7 +47,7 @@ inline auto set(_Data && data, _Key && key, _Value && value)
         using nkey = std::decay_t<_Key>;
         using okey = std::decay_t<decltype(std::get<0>(element))>;
         using same = std::is_same<nkey, okey>;
-        return meta::bool_constant<!same::value>{};
+        return meta::bool_v<!same::value>;
     });
 
     return std::tuple_cat(result, std::make_tuple(std::make_pair(key, value)));

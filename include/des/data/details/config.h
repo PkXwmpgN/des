@@ -34,10 +34,10 @@ struct config
 public:
 
     template<size_t _Capacity>
-    constexpr auto fixed_entity(meta::size<_Capacity> capacity) const noexcept;
+    constexpr auto fixed_entity(meta::sz_t<_Capacity> capacity) const noexcept;
 
     template<size_t _Capacity>
-    constexpr auto dynamic_entity(meta::size<_Capacity> capacity) const noexcept;
+    constexpr auto dynamic_entity(meta::sz_t<_Capacity> capacity) const noexcept;
 
     constexpr auto fixed() const noexcept;
     constexpr auto capacity() const noexcept;

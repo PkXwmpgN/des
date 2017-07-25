@@ -56,13 +56,13 @@ constexpr auto make_data_service()
 namespace fixed
 {
     constexpr auto config = des::data::make_config()
-        .fixed_entity(des::meta::size_v<3>);
+        .fixed_entity(des::meta::sz_v<3>);
 }
 
 namespace dynamic
 {
     constexpr auto config = des::data::make_config()
-        .dynamic_entity(des::meta::size_v<2>);
+        .dynamic_entity(des::meta::sz_v<2>);
 }
 
 template<typename _Config>

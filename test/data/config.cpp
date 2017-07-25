@@ -14,7 +14,7 @@ int main()
 
     {
         constexpr auto config = des::data::make_config()
-            .fixed_entity(des::meta::size_v<10>);
+            .fixed_entity(des::meta::sz_v<10>);
 
         static_assert(config.fixed() == true, "");
         static_assert(config.capacity() == 10, "");
@@ -22,7 +22,7 @@ int main()
 
     {
         constexpr auto config = des::data::make_config()
-            .dynamic_entity(des::meta::size_v<100>);
+            .dynamic_entity(des::meta::sz_v<100>);
 
         static_assert(config.fixed() == false, "");
         static_assert(config.capacity() == 100, "");

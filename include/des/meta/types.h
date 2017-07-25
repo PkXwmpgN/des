@@ -30,19 +30,29 @@ IN THE SOFTWARE.
 
 DES_META_BEGIN
 
+template<typename _Type, _Type _Value>
+using constant_t = std::integral_constant<_Type, _Value>;
+
+template<typename _Type, _Type _Value>
+constexpr auto constant_v = constant_t<_Type, _Value>{};
+
+template<std::size_t _Value>
+using sz_t = constant_t<std::size_t, _Value>;
+
 template<std::size_t _Size>
-using size = std::integral_constant<decltype(_Size), _Size>;
-template<std::size_t _Size>
-constexpr auto size_v = size<_Size>{};
+constexpr auto sz_v = sz_t<_Size>{};
 
 template<bool _Value>
-using bool_constant = std::integral_constant<bool, _Value>;
+using bool_t = constant_t<bool, _Value>;
 
-using true_type = bool_constant<true>;
-constexpr auto true_v = true_type{};
+template<bool _Value>
+constexpr auto bool_v = bool_t<_Value>{};
 
-using false_type = bool_constant<false>;
-constexpr auto false_v = false_type{};
+using true_t = bool_t<true>;
+constexpr auto true_v = true_t{};
+
+using false_t = bool_t<false>;
+constexpr auto false_v = false_t{};
 
 DES_META_END
 

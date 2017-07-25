@@ -14,7 +14,7 @@ int main()
     static_assert(des::meta::is_specialization_of_v<B, B<int>>, "");
     static_assert(!des::meta::is_specialization_of_v<B, int>, "");
     static_assert(std::is_same<des::meta::is_specialization_of<B, B<int>>,
-                               des::meta::true_type>::value, "");
+                               des::meta::true_t>::value, "");
 
     // is_tuple_contains
 
@@ -25,5 +25,5 @@ int main()
     static_assert(des::meta::is_tuple_contains_v<int, tuple_type>, "");
     static_assert(!des::meta::is_tuple_contains_v<char, tuple_type>, "");
     static_assert(std::is_same<des::meta::is_tuple_contains<A, tuple_type>,
-                               des::meta::true_type>::value, "");
+                               des::meta::true_t>::value, "");
 }
