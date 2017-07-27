@@ -38,7 +38,7 @@ template<typename _Type>
 constexpr auto system = handle<_Type>{};
 
 template<typename _Type>
-constexpr auto is_system = meta::is_specialization_of<handle, _Type>{};
+constexpr auto is_system = meta::is_specialization_of_v<handle, _Type>;
 
 DES_SYSTEM_DETAILS_END
 

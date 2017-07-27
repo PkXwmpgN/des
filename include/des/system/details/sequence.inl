@@ -39,7 +39,7 @@ namespace /* anonymous */
     template<typename _Node, typename... _Nodes, typename _Discovered>
     inline auto filter_(std::tuple<_Node, _Nodes...> &&, _Discovered && discovered)
     {
-        auto node = meta::if_(meta::is_tuple_contains<_Node, _Discovered>{})
+        auto node = meta::if_(meta::is_tuple_contains_v<_Node, _Discovered>)
             .then_([](){ return std::make_tuple(); })
             .else_([](){ return std::make_tuple(_Node{}); })();
 

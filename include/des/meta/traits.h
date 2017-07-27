@@ -32,20 +32,20 @@ IN THE SOFTWARE.
 DES_META_BEGIN
 
 template <template<typename...> class _Template, typename _Type>
-using is_specialization_of = typename details::is_specialization_of<_Template, _Type>::type;
+using is_specialization_of_t = typename details::is_specialization_of<_Template, _Type>::type;
 
 template <template<typename...> class _Template, typename _Type>
-constexpr auto is_specialization_of_v = is_specialization_of<_Template, _Type>::value;
+constexpr auto is_specialization_of_v = is_specialization_of_t<_Template, _Type>{};
 
 template<typename _Type, typename _Tuple>
-using is_tuple_contains = typename details::tuple_contains_type
+using is_tuple_contains_t = typename details::tuple_contains_type
 <
     std::decay_t<_Type>,
     std::decay_t<_Tuple>
 >::type;
 
 template<typename _Type, typename _Tuple>
-constexpr auto is_tuple_contains_v = is_tuple_contains<_Type, _Tuple>::value;
+constexpr auto is_tuple_contains_v = is_tuple_contains_t<_Type, _Tuple>{};
 
 DES_META_END
 

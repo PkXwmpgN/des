@@ -39,8 +39,8 @@ DES_COMPONENT_DETAILS_BEGIN
 namespace /* anonymous */
 {
     template<typename _Buffer, typename _Component>
-    constexpr auto contains_v = meta::is_tuple_contains<std::decay_t<_Component>,
-                                        typename std::decay_t<_Buffer>::value_type>{};
+    constexpr auto contains_v = meta::is_tuple_contains_v<std::decay_t<_Component>,
+                                        typename std::decay_t<_Buffer>::value_type>;
 
     template<typename _Component, typename _Data>
     inline decltype(auto) get_buffer(_Component && component, _Data && data) noexcept

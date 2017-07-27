@@ -45,7 +45,7 @@ template<typename _Type>
 constexpr auto component = handle<_Type>{};
 
 template<typename _Type>
-constexpr auto is_component = meta::is_specialization_of<handle, _Type>{};
+constexpr auto is_component = meta::is_specialization_of_v<handle, _Type>;
 
 DES_COMPONENT_DETAILS_END
 
